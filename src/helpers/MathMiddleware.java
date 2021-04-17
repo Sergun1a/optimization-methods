@@ -11,10 +11,8 @@ final public class MathMiddleware {
     // function for exchanging two rows
     // of a matrix
     static void swap(long[][] mat,
-                     int row1, int row2, int col)
-    {
-        for (int i = 0; i < col; i++)
-        {
+                     int row1, int row2, int col) {
+        for (int i = 0; i < col; i++) {
             long temp = mat[row1][i];
             mat[row1][i] = mat[row2][i];
             mat[row2][i] = temp;
@@ -41,8 +39,7 @@ final public class MathMiddleware {
     public long rang(long[][] mat) {
         int rank = C;
 
-        for (int row = 0; row < rank; row++)
-        {
+        for (int row = 0; row < rank; row++) {
 
             // Before we visit current row
             // 'row', we make sure that
@@ -50,18 +47,15 @@ final public class MathMiddleware {
             // are 0.
 
             // Diagonal element is not zero
-            if (mat[row][row] != 0)
-            {
-                for (int col = 0; col < R; col++)
-                {
-                    if (col != row)
-                    {
+            if (mat[row][row] != 0) {
+                for (int col = 0; col < R; col++) {
+                    if (col != row) {
                         // This makes all entries
                         // of current column
                         // as 0 except entry
                         // 'mat[row][row]'
                         double mult =
-                                (double)mat[col][row] /
+                                (double) mat[col][row] /
                                         mat[row][row];
 
                         for (int i = 0; i < rank; i++)
@@ -83,21 +77,18 @@ final public class MathMiddleware {
             // then remvoe this column by
             // swapping it with last column and
             // reducing number of columns by 1.
-            else
-            {
+            else {
                 boolean reduce = true;
 
                 // Find the non-zero element
                 // in current column
-                for (int i = row + 1; i < R; i++)
-                {
+                for (int i = row + 1; i < R; i++) {
                     // Swap the row with non-zero
                     // element with this row.
-                    if (mat[i][row] != 0)
-                    {
+                    if (mat[i][row] != 0) {
                         swap(mat, row, i, rank);
                         reduce = false;
-                        break ;
+                        break;
                     }
                 }
 
@@ -105,13 +96,12 @@ final public class MathMiddleware {
                 // non-zero element in current
                 // columnm, then all values in
                 // this column are 0.
-                if (reduce)
-                {
+                if (reduce) {
                     // Reduce number of columns
                     rank--;
 
                     // Copy the last column here
-                    for (int i = 0; i < R; i ++)
+                    for (int i = 0; i < R; i++)
                         mat[i][row] = mat[i][rank];
                 }
 
@@ -121,6 +111,33 @@ final public class MathMiddleware {
         }
 
         return rank;
+    }
+
+    /**
+     * Нахождение НОК двух чисел
+     *
+     * @param a - первое число
+     * @param b - второе число
+     * @return НОК
+     */
+    public static long nok(long a, long b) {
+        while (b != 0) {
+            long tmp = a % b;
+            a = b;
+            b = tmp;
+        }
+        return a;
+    }
+
+    /**
+     * Нахождение НОД двух чисел
+     *
+     * @param a
+     * @param b
+     * @return НОД
+     */
+    public static long nod(long a, long b) {
+        return a / nok(a, b) * b;
     }
 
 }
