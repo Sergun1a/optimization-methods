@@ -14,9 +14,8 @@ public class Main extends Application {
         menu.show();
 
         try {
-
             System.out.println(Fraction.toFracture("123/3"));
-            System.out.println(Fraction.toFracture(46));
+            System.out.println(Fraction.toFracture((long)46));
             System.out.println(Fraction.toFracture(31.782));
 
 
@@ -24,7 +23,7 @@ public class Main extends Application {
             Fraction second = new Fraction(4, 39);
 
             System.out.println(Fraction.summFractions(first, second).toString());
-            System.out.println(Fraction.subtractionFractions(first, second).toString());
+            System.out.println(Fraction.subtractionFractions(second, first).toString());
             System.out.println(Fraction.multiplyFractions(first, second).toString());
             System.out.println(Fraction.divisionFractions(first, second).toString());
         } catch (InvalidTypeException ex) {

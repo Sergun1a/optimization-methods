@@ -90,18 +90,27 @@ public class Fraction {
 
     public static Fraction toFracture(Object futureFracture) throws InvalidTypeException {
         if (futureFracture instanceof String) {
-
+            String[] subStr = ((String) futureFracture).split("/");
+            if (subStr.length < 2) {
+                ApplicationMenu.showAlert("warning", "Некорректный ввод",
+                        "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");
+                throw new InvalidTypeException("Не могу перевести число в обыкновенную дробь из строки");
+            }
+            long newDividend = Long.parseLong(subStr[0]);
+            long newDivider = Long.parseLong(subStr[1]);
+            long nok = MathMiddleware.nok(newDividend, newDivider);
+            return new Fraction(newDividend / nok, newDivider / nok);
         }
         if (futureFracture instanceof Long) {
-            return new Fraction((long) futureFracture, 1);
+            return new Fraction((long) futureFracture, (long) 1);
         }
         if (futureFracture instanceof Double) {
             long divider = 1;
-            while ((long) futureFracture != (double) futureFracture) {
+            while (((Double) futureFracture).longValue() != (double) futureFracture) {
                 futureFracture = (double) futureFracture * 10;
                 divider = divider * 10;
             }
-            return new Fraction((long) futureFracture, divider);
+            return new Fraction(((Double) futureFracture).longValue(), divider);
         }
         ApplicationMenu.showAlert("warning", "Некорректный ввод",
                 "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");
