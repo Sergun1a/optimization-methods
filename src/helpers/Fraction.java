@@ -1,7 +1,6 @@
 package helpers;
 
 import com.sun.jdi.InvalidTypeException;
-import javafx.scene.control.Alert;
 import sample.ApplicationMenu;
 
 /**
@@ -14,6 +13,11 @@ public class Fraction {
     public Fraction(long newDividend, long newDivider) {
         dividend = newDividend;
         divider = newDivider;
+    }
+
+    public Fraction(long newDividend) {
+        dividend = newDividend;
+        divider = 1;
     }
 
     public String toString() {
@@ -88,7 +92,14 @@ public class Fraction {
         return summFractions(first, new Fraction(-second.getDividend(), second.getDivider()));
     }
 
-    public static Fraction toFracture(Object futureFracture) throws InvalidTypeException {
+    /**
+     * Конвертирую String, Long и Double во Fraction. Ожидаю строку вида (long)/(long).
+     *
+     * @param futureFracture - то что нужно конвертировать в дробь
+     * @return Дробь
+     * @throws InvalidTypeException - если получил атрибут некорректного типа
+     */
+    public static Fraction toFraction(Object futureFracture) throws InvalidTypeException {
         if (futureFracture instanceof String) {
             String[] subStr = ((String) futureFracture).split("/");
             if (subStr.length < 2) {
@@ -115,5 +126,15 @@ public class Fraction {
         ApplicationMenu.showAlert("warning", "Некорректный ввод",
                 "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");
         throw new InvalidTypeException("Не могу перевести число в обыкновенную дробь");
+    }
+
+    /**
+     * Возвращает дробь обратную переданной
+     *
+     * @param fraction - дробь, для которой нужно вернуть обратную
+     * @return обратную дробь
+     */
+    public static Fraction reverseFraction(Fraction fraction) {
+        return new Fraction(fraction.getDivider(), fraction.getDividend());
     }
 }

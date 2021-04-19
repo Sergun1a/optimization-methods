@@ -126,6 +126,9 @@ final public class MathMiddleware {
             a = b;
             b = tmp;
         }
+        if (a == 0) {
+            return (long) 1;
+        }
         return a;
     }
 
@@ -137,7 +140,44 @@ final public class MathMiddleware {
      * @return НОД
      */
     public static long nod(long a, long b) {
-        return a / nok(a, b) * b;
+        long res = a / nok(a, b) * b;
+        if (res == 0) {
+            return (long) 1;
+        }
+        return res;
     }
 
+
+    /**
+     * Решаю переданную систему методом Гаусса
+     *
+     * @param a - матрица которую нужно решить методом гаусса
+     * @return Матрицу решенную методом Гаусса
+     */
+    public static Fraction[][] gaus(Fraction[][] a) {
+        Fraction x[] = new Fraction[a.length];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = a[i][a[i].length - 1];
+        }
+        Fraction m;
+        for (int k = 1; k < a.length; k++) {
+            for (int j = k; j < a.length; j++) {
+                m = Fraction.divisionFractions(a[j][k - 1], a[k - 1][k - 1]);
+                for (int i = 0; i < a[j].length; i++) {
+                    a[j][i] = Fraction.subtractionFractions(a[j][i], Fraction.multiplyFractions(m, a[k - 1][i]));
+                }
+                x[j] = Fraction.subtractionFractions(x[j], Fraction.multiplyFractions(m, x[k - 1]));
+            }
+        }
+
+        // привожу главную диагональ к единицам
+        for (int j = 0; j < a.length; j++) {
+            Fraction primaryDiagonalElement = a[j][j];
+            for (int i = 0; i < a[j].length; i++) {
+                a[j][i] = Fraction.multiplyFractions(a[j][i], Fraction.reverseFraction(primaryDiagonalElement));
+            }
+        }
+
+        return a;
+    }
 }
