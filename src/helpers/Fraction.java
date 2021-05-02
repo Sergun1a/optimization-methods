@@ -137,4 +137,53 @@ public class Fraction {
     public static Fraction reverseFraction(Fraction fraction) {
         return new Fraction(fraction.getDivider(), fraction.getDividend());
     }
+
+
+    /**
+     * Проверяет что переданная дробь СТРОГО меньше переданного значения
+     * @param fraction - дробь, которую нужно сравнить
+     * @param value - значение с которым нужно сравнить
+     * @return bool
+     * @throws InvalidTypeException
+     */
+    public static boolean lowerThen(Fraction fraction, Object value) throws InvalidTypeException {
+        Fraction compareFraction = toFraction(value);
+        if (fraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider()) <
+                compareFraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяет что переданная дробь СТРОГО больше переданного значения
+     * @param fraction - дробь, которую нужно сравнить
+     * @param value - значение с которым нужно сравнить
+     * @return bool
+     * @throws InvalidTypeException
+     */
+    public static boolean moreThen(Fraction fraction, Object value) throws InvalidTypeException {
+        Fraction compareFraction = toFraction(value);
+        if (fraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider()) >
+                compareFraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяет что переданная дробь равна переданному значению
+     * @param fraction - дробь, которую нужно сравнить
+     * @param value - значение с которым нужно сравнить
+     * @return bool
+     * @throws InvalidTypeException
+     */
+    public static boolean equal(Fraction fraction, Object value) throws InvalidTypeException {
+        Fraction compareFraction = toFraction(value);
+        if (fraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider()) ==
+                compareFraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider())) {
+            return true;
+        }
+        return false;
+    }
 }
