@@ -100,6 +100,10 @@ public class Fraction {
      * @throws InvalidTypeException - если получил атрибут некорректного типа
      */
     public static Fraction toFraction(Object futureFracture) throws InvalidTypeException {
+        if (futureFracture instanceof Fraction) {
+            return (Fraction) futureFracture;
+        }
+
         if (futureFracture instanceof String) {
             String[] subStr = ((String) futureFracture).split("/");
             if (subStr.length < 2) {
@@ -141,8 +145,9 @@ public class Fraction {
 
     /**
      * Проверяет что переданная дробь СТРОГО меньше переданного значения
+     *
      * @param fraction - дробь, которую нужно сравнить
-     * @param value - значение с которым нужно сравнить
+     * @param value    - значение с которым нужно сравнить
      * @return bool
      * @throws InvalidTypeException
      */
@@ -157,8 +162,9 @@ public class Fraction {
 
     /**
      * Проверяет что переданная дробь СТРОГО больше переданного значения
+     *
      * @param fraction - дробь, которую нужно сравнить
-     * @param value - значение с которым нужно сравнить
+     * @param value    - значение с которым нужно сравнить
      * @return bool
      * @throws InvalidTypeException
      */
@@ -173,8 +179,9 @@ public class Fraction {
 
     /**
      * Проверяет что переданная дробь равна переданному значению
+     *
      * @param fraction - дробь, которую нужно сравнить
-     * @param value - значение с которым нужно сравнить
+     * @param value    - значение с которым нужно сравнить
      * @return bool
      * @throws InvalidTypeException
      */

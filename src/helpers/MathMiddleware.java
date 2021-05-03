@@ -20,14 +20,20 @@ final public class MathMiddleware {
     }
 
     /**
-     * Решаю переданную матрицу методом Гаусса
+     * Меняю местами столбцы матрицы
      *
-     * @param rawMatrix - матрицу которую нужно решить
-     * @return - решенная методом Гаусса матрица
+     * @param mat  - матрица
+     * @param col1 - номер первого столбца для замены
+     * @param col2 - номер второго столбца для замены
+     * @return Fraction[][] массив с поменяными строками
      */
-    public long[][] gaysMethod(long[][] rawMatrix) {
-        long[][] solvedMatrix = rawMatrix;
-        return solvedMatrix;
+    public static Fraction[][] swapCol(Fraction[][] mat, int col1, int col2) {
+        for (int i = 0; i < mat.length; i++) {
+            Fraction temp = mat[i][col1];
+            mat[i][col1] = mat[i][col2];
+            mat[i][col2] = temp;
+        }
+        return mat;
     }
 
     /**
@@ -160,6 +166,7 @@ final public class MathMiddleware {
             x[i] = a[i][a[i].length - 1];
         }
         Fraction m;
+        // прямой ход гаусса
         for (int k = 1; k < a.length; k++) {
             for (int j = k; j < a.length; j++) {
                 m = Fraction.divisionFractions(a[j][k - 1], a[k - 1][k - 1]);
@@ -169,6 +176,10 @@ final public class MathMiddleware {
                 x[j] = Fraction.subtractionFractions(x[j], Fraction.multiplyFractions(m, x[k - 1]));
             }
         }
+
+        // обратный ход гаусса
+        /*@TODO Сделать обратный ход метода гаусса*/
+
 
         // привожу главную диагональ к единицам
         for (int j = 0; j < a.length; j++) {
