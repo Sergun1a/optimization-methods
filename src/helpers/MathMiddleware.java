@@ -177,15 +177,24 @@ final public class MathMiddleware {
             }
         }
 
-        // обратный ход гаусса
-        /*@TODO Сделать обратный ход метода гаусса*/
-
-
         // привожу главную диагональ к единицам
         for (int j = 0; j < a.length; j++) {
             Fraction primaryDiagonalElement = a[j][j];
             for (int i = 0; i < a[j].length; i++) {
                 a[j][i] = Fraction.multiplyFractions(a[j][i], Fraction.reverseFraction(primaryDiagonalElement));
+            }
+        }
+
+        // обратный ход гаусса
+        for (int i = 1; i < a.length; i++) {
+            for (int j = 0; j < i; j++) {
+                Fraction coef = Fraction.divisionFractions(a[j][i], a[i][i]);
+                for (int rowEl = i; rowEl < a[0].length; rowEl++) {
+                    a[j][rowEl] = Fraction.subtractionFractions(
+                            a[j][rowEl],
+                            Fraction.multiplyFractions(a[i][rowEl], coef)
+                    );
+                }
             }
         }
 

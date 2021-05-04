@@ -21,24 +21,24 @@ public class Main extends Application {
 
             //System.out.println(Fraction.lowerThen(Fraction.toFraction("123/3"), 0));
             // гаус тест
-            Fraction[][] a = {
+            /*Fraction[][] a = {
                     {Fraction.toFraction((long) 3), Fraction.toFraction((long) -7), Fraction.toFraction((long) 2), Fraction.toFraction((long) -1), Fraction.toFraction((long) 8)},
                     {Fraction.toFraction((long) 1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 3), Fraction.toFraction((long) 4), Fraction.toFraction((long) 1)},
                     {Fraction.toFraction((long) 0), Fraction.toFraction((long) 3), Fraction.toFraction((long) 0), Fraction.toFraction((long) 6), Fraction.toFraction((long) 1)}
             };
-            System.out.println(Arrays.deepToString(MathMiddleware.gaus(a)));
+            System.out.println(Arrays.deepToString(MathMiddleware.gaus(a)));*/
 
             // симплекс тест
             SimplexMethod simplex = new SimplexMethod(
                     "min",
-                    new Fraction[]{Fraction.toFraction((long) -1), Fraction.toFraction((long) 2), Fraction.toFraction((long) -1)},
+                    new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -1), Fraction.toFraction((long) 2), Fraction.toFraction((long) -1)},
                     new Fraction[][]{
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 4), Fraction.toFraction((long) 1), Fraction.toFraction((long) 5)},
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) -2), Fraction.toFraction((long) -1), Fraction.toFraction((long) -1)},
                     },
                     new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 0)}
             );
-            simplex.solve();
+            simplex.quickSolve();
         } catch (InvalidTypeException ex) {
             System.out.println(ex.getMessage());
         }
