@@ -108,7 +108,8 @@ public class SimplexMethod {
     protected int[] pickupElement() throws InvalidTypeException {
         int rows = system.length;
         int columns = system[0].length;
-
+        int temp;
+        int slave, master;
         int column = -1;
 
         // подбираю подходящие столбцы
@@ -116,6 +117,12 @@ public class SimplexMethod {
             if (Fraction.lowerThen(system[rows - 1][i], (long) 0)) {
                 column = i;
                 if (chooseRow(i) != -1) {
+                    // переставлю опорную и зависимую переменную
+                    master = findVar(chooseRow(i) + 1);
+                    slave = findVar(-(i + 1));
+                    temp = masterSlave[master];
+                    masterSlave[master] = masterSlave[slave];
+                    masterSlave[slave] = temp;
                     return new int[]{chooseRow(i), i};
                 }
             }
@@ -201,6 +208,12 @@ public class SimplexMethod {
                 if (!Fraction.equal(basis[i], (long) 0)) {
                     if (buf != -1) {
                         system = MathMiddleware.swapCol(system, buf, i);
+                        basis[buf] = Fraction.toFraction((long) 1);
+                        basis[i] = Fraction.toFraction((long) 0);
+                        int temp;
+                        /*temp = masterSlave[i];
+                        masterSlave[i] = masterSlave[buf];
+                        masterSlave[buf] = temp;*/
                         buf = -1;
                     }
                 }
@@ -215,23 +228,27 @@ public class SimplexMethod {
      * @throws InvalidTypeException
      */
     protected void gausUpdateFunction() throws InvalidTypeException {
-        for (int master = 0; master < system.length; master++) {
-            Fraction coef = function[master + 1];
-            function[master + 1] = Fraction.toFraction((long) 0);
-            for (int slave = system.length; slave < system[master].length - 1; slave++) {
-                function[slave + 1] = Fraction.summFractions(
-                        function[slave + 1],
-                        Fraction.multiplyFractions(
-                                coef,
-                                Fraction.multiplyFractions(system[master][slave], Fraction.toFraction((long) -1))
-                        )
+        for (int master = 0; master < masterSlave.length; master++) {
+            if (masterSlave[master] > 0) {
+                Fraction coef = function[master + 1];
+                function[master + 1] = Fraction.toFraction((long) 0);
+                for (int slave = 0; slave < masterSlave.length; slave++) {
+                    if (masterSlave[slave] < 0) {
+                        function[slave + 1] = Fraction.summFractions(
+                                function[slave + 1],
+                                Fraction.multiplyFractions(
+                                        coef,
+                                        Fraction.multiplyFractions(system[masterSlave[master] - 1][-masterSlave[slave] + system.length - 1], Fraction.toFraction((long) -1))
+                                )
+                        );
+                    }
+                }
+                // складываю константы
+                function[0] = Fraction.summFractions(
+                        function[0],
+                        Fraction.multiplyFractions(coef, system[masterSlave[master] - 1][system[0].length - 1])
                 );
             }
-            // складываю константы
-            function[0] = Fraction.summFractions(
-                    function[0],
-                    Fraction.multiplyFractions(coef, system[master][system[master].length - 1])
-            );
         }
     }
 
@@ -247,10 +264,12 @@ public class SimplexMethod {
             }
         }
         // вставляю обновленную функцию
+        int counter = 0;
         for (int i = 1; i < function.length; i++) {
             if (!Fraction.equal(function[i], (long) 0)) {
                 if (masterSlave[i - 1] < 0) {
-                    simplexTable[system.length][i - 1 - system.length] = function[i];
+                    simplexTable[system.length][counter] = function[i];
+                    counter++;
                 } else {
                     System.out.println("Возникла ошибка. Основная переменная попала на место зависимой");
                 }
@@ -258,6 +277,50 @@ public class SimplexMethod {
         }
         simplexTable[system.length][system[0].length - system.length - 1] = Fraction.multiplyFractions(function[0], Fraction.toFraction((long) -1));
         system = simplexTable;
+    }
+
+    /**
+     * Выполняю шаг симплекс метода.
+     *
+     * @return строку и столбец выбранного опорного элемента
+     * @throws InvalidTypeException
+     */
+    protected int[] simplexStep() throws InvalidTypeException {
+        int[] element = pickupElement();
+        if (element[0] != -1) {
+            calculateNewSystem(element[0], element[1]);
+            previous_steps.add(this);
+        }
+        return element;
+    }
+
+
+    /**
+     * Нахожу номер переменной по её значению в masterSlave
+     *
+     * @param value - значение. Если нужно найти первую основную переменную нужно передать 1, если первую зависимую переменную, то нужно передать -1 и т.д.
+     * @return номер переменной, -1 если не нашел
+     */
+    protected int findVar(int value) {
+        for (int i = 0; i < masterSlave.length; i++) {
+            if (masterSlave[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Вывод решения симплекс метода
+     */
+    public void printSolution() throws InvalidTypeException {
+        for (int i = 0; i < system.length - 1; i++) {
+            System.out.println("x" + (findVar(i + 1) + 1) + " = " + system[i][system[i].length - 1]);
+        }
+        for (int i = 0; i < system[0].length - 1; i++) {
+            System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
+        }
+        System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
     }
 
     public void quickSolve() throws InvalidTypeException {
@@ -274,16 +337,18 @@ public class SimplexMethod {
 
         // нахожу опорные элементы и считаю новые симплекс таблицы
         int[] element = pickupElement();
+        while (element[0] != -1) {
+            calculateNewSystem(element[0], element[1]);
+            element = pickupElement();
+        }
         if (element[0] == -1 && element[1] == -1) {
             System.out.println("Система решена");
+            printSolution();
             return;
         }
         if (element[0] == -1 && element[1] != -1) {
             System.out.println("Система не имеет решения");
             return;
         }
-        calculateNewSystem(element[0], element[1]);
-        previous_steps.add(this);
-        System.out.println(Arrays.deepToString(system));
     }
 }

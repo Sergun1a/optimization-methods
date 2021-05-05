@@ -10,6 +10,15 @@ public class Fraction {
     private long dividend; //  делимое
     private long divider;  //  делитель
 
+    public static Fraction toStandartFraction(Fraction fraction) {
+        if (fraction.getDivider() < 0 && fraction.getDividend() > 0) {
+            fraction.setDivider(-fraction.getDivider());
+            fraction.setDividend(-fraction.getDividend());
+        }
+
+        return fraction;
+    }
+
     public Fraction(long newDividend, long newDivider) {
         dividend = newDividend;
         divider = newDivider;
@@ -48,6 +57,9 @@ public class Fraction {
      * @return результат перемножения двух дробей
      */
     public static Fraction multiplyFractions(Fraction first, Fraction second) {
+        first = toStandartFraction(first);
+        second = toStandartFraction(second);
+
         long newDividend = first.getDividend() * second.getDividend();
         long newDivider = first.getDivider() * second.getDivider();
         long nok = MathMiddleware.nok(newDividend, newDivider);
@@ -63,6 +75,8 @@ public class Fraction {
      * @return результат деления двух дробей
      */
     public static Fraction divisionFractions(Fraction first, Fraction second) {
+        first = toStandartFraction(first);
+        second = toStandartFraction(second);
         return Fraction.multiplyFractions(first, new Fraction(second.getDivider(), second.getDividend()));
     }
 
@@ -74,6 +88,8 @@ public class Fraction {
      * @return результат сложения двух дробей
      */
     public static Fraction summFractions(Fraction first, Fraction second) {
+        first = toStandartFraction(first);
+        second = toStandartFraction(second);
         long newDivider = MathMiddleware.nod(first.getDivider(), second.getDivider());
         long newDividend = first.getDividend() * (newDivider / first.getDivider()) + second.getDividend() * (newDivider / second.getDivider());
         long nok = MathMiddleware.nok(newDividend, newDivider);
@@ -89,6 +105,8 @@ public class Fraction {
      * @return результат вычитания двух дробей
      */
     public static Fraction subtractionFractions(Fraction first, Fraction second) {
+        first = toStandartFraction(first);
+        second = toStandartFraction(second);
         return summFractions(first, new Fraction(-second.getDividend(), second.getDivider()));
     }
 
@@ -139,6 +157,7 @@ public class Fraction {
      * @return обратную дробь
      */
     public static Fraction reverseFraction(Fraction fraction) {
+        fraction = toStandartFraction(fraction);
         return new Fraction(fraction.getDivider(), fraction.getDividend());
     }
 
@@ -169,6 +188,7 @@ public class Fraction {
      * @throws InvalidTypeException
      */
     public static boolean moreThen(Fraction fraction, Object value) throws InvalidTypeException {
+        fraction = toStandartFraction(fraction);
         Fraction compareFraction = toFraction(value);
         if (fraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider()) >
                 compareFraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider())) {
@@ -186,6 +206,7 @@ public class Fraction {
      * @throws InvalidTypeException
      */
     public static boolean equal(Fraction fraction, Object value) throws InvalidTypeException {
+        fraction = toStandartFraction(fraction);
         Fraction compareFraction = toFraction(value);
         if (fraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider()) ==
                 compareFraction.getDividend() * MathMiddleware.nok(fraction.getDivider(), compareFraction.getDivider())) {
