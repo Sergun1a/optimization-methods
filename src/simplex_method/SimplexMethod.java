@@ -4,7 +4,6 @@ import com.sun.jdi.InvalidTypeException;
 import helpers.Fraction;
 import helpers.MathMiddleware;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -42,10 +41,6 @@ public class SimplexMethod {
     public static final String MAX = "max";
     public static final String MIN = "min";
 
-    /**
-     * Кол-во переменных функции
-     */
-    protected int n;
 
     /**
      * Тип задачи которую решает функция. По умолчанию минимизация
@@ -71,6 +66,16 @@ public class SimplexMethod {
      * Базис для решения симплекс методом
      */
     protected Fraction[] basis;
+
+
+    /**
+     * Установка пользовательского базиса
+     *
+     * @param new_basis - пользовательский базис
+     */
+    protected void setBasis(Fraction[] new_basis) {
+        basis = new_basis;
+    }
 
     /**
      * Массив где хранится информация о том какие переменные главные, а какие зависимые
@@ -183,7 +188,7 @@ public class SimplexMethod {
             if (Fraction.equal(basis[i], (long) 0)) {
                 masterSlave[i] = --slave_counter;
             }
-            // i-элемент равен нулю значит переменная x(i+1) независимая
+            // i-элемент не равен нулю значит переменная x(i+1) независимая
             if (!Fraction.equal(basis[i], (long) 0)) {
                 masterSlave[i] = ++master_counter;
             }
@@ -285,7 +290,7 @@ public class SimplexMethod {
      * @return строку и столбец выбранного опорного элемента
      * @throws InvalidTypeException
      */
-    protected int[] simplexStep() throws InvalidTypeException {
+    protected int[] makeStep() throws InvalidTypeException {
         int[] element = pickupElement();
         if (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
@@ -323,7 +328,28 @@ public class SimplexMethod {
         System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
     }
 
-    public void quickSolve() throws InvalidTypeException {
+    /**
+     * Сразу решаю таблицу
+     *
+     * @throws InvalidTypeException
+     */
+    protected int[] quickSolve() throws InvalidTypeException {
+        int[] element = pickupElement();
+        while (element[0] != -1) {
+            calculateNewSystem(element[0], element[1]);
+            element = pickupElement();
+        }
+        if (element[0] == -1 && element[1] == -1) {
+            System.out.println("Система решена");
+            printSolution();
+
+        } else if (element[0] == -1 && element[1] != -1) {
+            System.out.println("Система не имеет решения");
+        }
+        return element;
+    }
+
+    public void solution() throws InvalidTypeException {
         //сохраняю информацию об основных и зависимых переменных
         masterSlaveInfo();
         // переставляю столбцы системы согласно полученному базису
@@ -336,19 +362,6 @@ public class SimplexMethod {
         gausToSimplex();
 
         // нахожу опорные элементы и считаю новые симплекс таблицы
-        int[] element = pickupElement();
-        while (element[0] != -1) {
-            calculateNewSystem(element[0], element[1]);
-            element = pickupElement();
-        }
-        if (element[0] == -1 && element[1] == -1) {
-            System.out.println("Система решена");
-            printSolution();
-            return;
-        }
-        if (element[0] == -1 && element[1] != -1) {
-            System.out.println("Система не имеет решения");
-            return;
-        }
+        quickSolve();
     }
 }
