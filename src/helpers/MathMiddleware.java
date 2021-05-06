@@ -1,5 +1,7 @@
 package helpers;
 
+import com.sun.jdi.InvalidTypeException;
+
 /**
  * Вспомогательный класс, реализуюший некоторые математические методы
  */
@@ -44,13 +46,13 @@ final public class MathMiddleware {
      * @return - матрица с вырезанным столбцом
      */
     public static Fraction[][] deleteCol(Fraction[][] mat, int col) {
-        Fraction[][] new_mat = new Fraction[mat.length - 1][mat[0].length];
+        Fraction[][] new_mat = new Fraction[mat.length][mat[0].length - 1];
         for (int i = 0; i < mat.length; i++) {
             for (int j = 0; j < col; j++) {
                 new_mat[i][j] = mat[i][j];
             }
             for (int j = col + 1; j < mat[0].length; j++) {
-                new_mat[j - 1][i] = mat[j][i];
+                new_mat[i][j - 1] = mat[i][j];
             }
         }
         return new_mat;
@@ -180,7 +182,7 @@ final public class MathMiddleware {
      * @param a - матрица которую нужно решить методом гаусса
      * @return Матрицу решенную методом Гаусса
      */
-    public static Fraction[][] gaus(Fraction[][] a) {
+    public static Fraction[][] gaus(Fraction[][] a) throws InvalidTypeException {
         Fraction x[] = new Fraction[a.length];
         for (int i = 0; i < x.length; i++) {
             x[i] = a[i][a[i].length - 1];

@@ -94,7 +94,7 @@ public class SimplexMethod {
         Fraction min = new Fraction(Long.MAX_VALUE, 1);
         for (int i = 0; i < rows - 1; i++) {
             if (Fraction.moreThen(system[i][column], (long) 0)) {
-                Fraction currentMin = Fraction.divisionFractions(system[rows - 1][column], system[i][column]);
+                Fraction currentMin = Fraction.divisionFractions(system[i][system[0].length - 1], system[i][column]);
                 if (Fraction.lowerThen(currentMin, min)) {
                     min = currentMin;
                     choosedRow = i;
@@ -232,7 +232,7 @@ public class SimplexMethod {
      *
      * @throws InvalidTypeException
      */
-    protected void gausUpdateFunction() throws InvalidTypeException {
+    protected void updateFunction() throws InvalidTypeException {
         for (int master = 0; master < masterSlave.length; master++) {
             if (masterSlave[master] > 0) {
                 Fraction coef = function[master + 1];
@@ -357,7 +357,7 @@ public class SimplexMethod {
         // решаю систему методом гаусса
         system = MathMiddleware.gaus(system);
         // произвожу замены в  функции, отталкиваясь от решения метода гаусса
-        gausUpdateFunction();
+        updateFunction();
         // приводу матрицу гаусса к стартовой симплекс таблице
         gausToSimplex();
 
