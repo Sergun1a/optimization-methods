@@ -73,7 +73,7 @@ public class SimplexMethod {
      *
      * @param new_basis - пользовательский базис
      */
-    protected void setBasis(Fraction[] new_basis) {
+    public void setBasis(Fraction[] new_basis) {
         basis = new_basis;
     }
 
