@@ -1,22 +1,19 @@
-package sample;
+package GUI;
 
 import com.sun.jdi.InvalidTypeException;
 import helpers.Fraction;
-import helpers.MathMiddleware;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import sample.ApplicationMenu;
 import simplex_method.ArtificialBasic;
-import simplex_method.SimplexMethod;
-
-import java.util.Arrays;
 
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //ApplicationMenu menu = new ApplicationMenu(primaryStage, "sample.fxml", "Методы оптимизации", 500, 400);
-        //menu.show();
+        ApplicationMenu menu = new ApplicationMenu(primaryStage, "main.fxml", "Методы оптимизации", 500, 400);
+        menu.show();
 
         try {
 

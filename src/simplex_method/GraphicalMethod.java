@@ -4,11 +4,11 @@ import com.sun.jdi.InvalidTypeException;
 import helpers.Fraction;
 import helpers.MathMiddleware;
 
-public class GraphicalMethod extends SimplexMethod {
+public class GraphicalMethod extends ArtificialBasic {
     Fraction[][] gausSolution;
 
     public GraphicalMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) throws InvalidTypeException {
-        super(u_type, u_function, u_system, new Fraction[u_system[0].length + u_system.length]);
+        super(u_type, u_function, u_system);
         generateBasis();
     }
 

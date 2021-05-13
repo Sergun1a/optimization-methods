@@ -20,9 +20,40 @@ public class ApplicationMenu {
     private BorderPane currentRoot;
     private Parent currentSceneBuilderRoot;
 
-    ApplicationMenu(Stage primaryStage, String filename, String title, Integer width, Integer height) throws IOException {
+    /**
+     * Создают новое окно из fxml файла
+     *
+     * @param filename - имя fxml файла из папки /GUI/fxml/
+     * @param title    - заголовок окна
+     * @param width    - ширина окна
+     * @param height   - высота окна
+     * @return Созданную сцену
+     * @throws IOException
+     */
+    public static Stage showNewStage(String filename, String title, Integer width, Integer height) throws IOException {
+        Stage newStage = new Stage();
+        Parent sceneFromFile = FXMLLoader.load(ApplicationMenu.class.getResource("../GUI/fxml/" + filename));
+        newStage.setTitle(title);
+        Scene newScene = new Scene(sceneFromFile, width, height);
+        newStage.setScene(newScene);
+        newStage.show();
+        return newStage;
+    }
+
+    /**
+     * Применяю переданную переданную сцену
+     *
+     * @param myScene  - сцена
+     * @param newStage
+     */
+    public static void applySceneToStage(Scene myScene, Stage newStage) {
+        newStage.setScene(myScene);
+        newStage.show();
+    }
+
+    public ApplicationMenu(Stage primaryStage, String filename, String title, Integer width, Integer height) throws IOException {
         stage = primaryStage;
-        currentSceneBuilderRoot = FXMLLoader.load(getClass().getResource(filename));
+        currentSceneBuilderRoot = FXMLLoader.load(getClass().getResource("../GUI/fxml/" + filename));
         stage.setTitle(title);
         currentScene = new Scene(currentSceneBuilderRoot, width, height);
         stage.setScene(currentScene);
