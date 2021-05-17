@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите количество переменных в функции" textAlignment="CENTER" wrappingWidth="282.13669776916504" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите количество уравнений в системе" textAlignment="CENTER" wrappingWidth="272.72718811035156" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите количество переменных в функции" wrappingWidth="282.13669776916504" />
+      <ComboBox fx:id="var_number" prefWidth="150.0" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите количество уравнений в системе" wrappingWidth="272.72718811035156" />
+      <ComboBox fx:id="sys_number" prefWidth="150.0" />
       <Text fx:id="error_field" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="266.13672828674316" />
       <Button fx:id="select_end" alignment="BOTTOM_LEFT" mnemonicParsing="false" onAction="#runMethod" text="Продолжить" />
    </children>
