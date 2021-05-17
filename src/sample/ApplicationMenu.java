@@ -1,5 +1,6 @@
 package sample;
 
+import helpers.Holder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -55,6 +56,7 @@ public class ApplicationMenu {
         stage = primaryStage;
         currentSceneBuilderRoot = FXMLLoader.load(getClass().getResource("../GUI/fxml/" + filename));
         stage.setTitle(title);
+        Holder.primaryStage = primaryStage;
         currentScene = new Scene(currentSceneBuilderRoot, width, height);
         stage.setScene(currentScene);
     }

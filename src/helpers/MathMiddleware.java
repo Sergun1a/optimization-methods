@@ -183,10 +183,6 @@ final public class MathMiddleware {
      * @return Матрицу решенную методом Гаусса
      */
     public static Fraction[][] gaus(Fraction[][] a) throws InvalidTypeException {
-        Fraction x[] = new Fraction[a.length];
-        for (int i = 0; i < x.length; i++) {
-            x[i] = a[i][a[i].length - 1];
-        }
         Fraction m;
         // прямой ход гаусса
         for (int k = 1; k < a.length; k++) {
@@ -195,7 +191,6 @@ final public class MathMiddleware {
                 for (int i = 0; i < a[j].length; i++) {
                     a[j][i] = Fraction.subtractionFractions(a[j][i], Fraction.multiplyFractions(m, a[k - 1][i]));
                 }
-                x[j] = Fraction.subtractionFractions(x[j], Fraction.multiplyFractions(m, x[k - 1]));
             }
         }
 

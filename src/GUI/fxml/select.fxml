@@ -5,10 +5,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.SelectController">
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите количество переменных в функции" wrappingWidth="282.13669776916504" />
-      <ComboBox fx:id="var_number" prefWidth="150.0" />
+      <ComboBox fx:id="var_number" onAction="#initialize" prefWidth="150.0" />
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Укажите количество уравнений в системе" wrappingWidth="272.72718811035156" />
       <ComboBox fx:id="sys_number" prefWidth="150.0" />
       <Text fx:id="error_field" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="266.13672828674316" />
