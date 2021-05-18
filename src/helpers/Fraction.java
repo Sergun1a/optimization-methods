@@ -1,7 +1,6 @@
 package helpers;
 
 import com.sun.jdi.InvalidTypeException;
-import sample.ApplicationMenu;
 
 /**
  * Класс реализующий функционал обыкновенных дробей
@@ -125,17 +124,23 @@ public class Fraction {
         if (futureFracture instanceof String) {
             String[] subStr = ((String) futureFracture).split("/");
             if (subStr.length < 2) {
-                ApplicationMenu.showAlert("warning", "Некорректный ввод",
-                        "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");
+                /*ApplicationMenu.showAlert("warning", "Некорректный ввод",
+                        "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");*/
                 throw new InvalidTypeException("Не могу перевести число в обыкновенную дробь из строки");
             }
-            long newDividend = Long.parseLong(subStr[0]);
-            long newDivider = Long.parseLong(subStr[1]);
+            long newDividend = 0;
+            long newDivider = 1;
+            try {
+                newDividend = Long.parseLong(subStr[0]);
+                newDivider = Long.parseLong(subStr[1]);
+            } catch (NumberFormatException ex) {
+                throw new InvalidTypeException("Не могу перевести число в обыкновенную дробь из строки");
+            }
             long nok = MathMiddleware.nok(newDividend, newDivider);
             return new Fraction(newDividend / nok, newDivider / nok);
         }
         if (futureFracture instanceof Integer) {
-            return new Fraction((Long) futureFracture, (long) 1);
+            return new Fraction((long) futureFracture, (long) 1);
         }
         if (futureFracture instanceof Long) {
             return new Fraction((long) futureFracture, (long) 1);
@@ -148,8 +153,8 @@ public class Fraction {
             }
             return new Fraction(((Double) futureFracture).longValue(), divider);
         }
-        ApplicationMenu.showAlert("warning", "Некорректный ввод",
-                "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");
+        /*ApplicationMenu.showAlert("warning", "Некорректный ввод",
+                "Некорректный ввод чисел", "Не могу перевести число в обыкновенную дробь");*/
         throw new InvalidTypeException("Не могу перевести число в обыкновенную дробь");
     }
 

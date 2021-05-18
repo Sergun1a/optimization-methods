@@ -1,14 +1,14 @@
 package sample;
 
 import helpers.Holder;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -151,5 +151,23 @@ public class ApplicationMenu {
     public MenuBar addMenuToMenuBar(MenuBar menuBar, Menu menu) {
         menuBar.getMenus().add(menu);
         return menuBar;
+    }
+
+    public static Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        ObservableList<Node> children = gridPane.getChildren();
+        for (Node node : children) {
+            Integer columnIndex = GridPane.getColumnIndex(node);
+            Integer rowIndex = GridPane.getRowIndex(node);
+
+            if (columnIndex == null)
+                columnIndex = 0;
+            if (rowIndex == null)
+                rowIndex = 0;
+
+            if (columnIndex == col && rowIndex == row) {
+                return node;
+            }
+        }
+        return null;
     }
 }

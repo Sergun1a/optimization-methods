@@ -1,8 +1,11 @@
 package GUI;
 
+import com.sun.jdi.InvalidTypeException;
+import helpers.Fraction;
 import helpers.Holder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -72,7 +75,7 @@ public class TaskStartController {
      */
     public void runMethod(ActionEvent actionEvent) {
         quick_solve.setOnAction((ActionEvent event) -> {
-
+            validate();
         });
     }
 
@@ -82,30 +85,72 @@ public class TaskStartController {
      * @return true или false
      */
     private boolean validate() {
+        // проверяю данные для функции
+        for (int i = 0; i < Holder.var_number; i++) {
+            try {
+                Fraction.toFraction(fieldValueType(((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.functionInputRow)).getText()));
+            } catch (InvalidTypeException ex) {
+                ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в функции",
+                        "Проверьте правильность коэффициентов функции. " +
+                                "Коэффициент может быть: целым числом, десятичной дробью (через точку), " +
+                                "обыкновенной дробью вида 'целое число/целое число' ");
+                return false;
+            }
+        }
         return true;
     }
 
     /**
+     * Конвертирую строку к числу нужного типа
+     * @param value
+     * @return Object
+     */
+    private Object fieldValueType(String value) {
+        // дробь
+        if (value.contains("/")) {
+            return value;
+        }
+        // целое число
+        try {
+            Long.parseLong(value);
+            return Long.parseLong(value);
+        } catch (NumberFormatException ignored) {
+
+        }
+        // десятичная дробь
+        try {
+            Double.parseDouble(value);
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ignored) {
+
+        }
+        return null;
+    }
+
+    /**
      * Приобразую введенные данные пользователем в стартовый симплекс метод
+     *
      * @return - класс симплекс метода с пользовательскими данными
      */
-    private SimplexMethod serializeToSimplex() {
+    /*private SimplexMethod serializeToSimplex() {
 
-    }
+    }*/
 
     /**
      * Приобразую введенные данные пользователем в стартовый метод искусственного базиса
+     *
      * @return - класс метода искусственного базиса с пользовательскими данными
      */
-    private ArtificialBasic serializeToAB() {
+    /*private ArtificialBasic serializeToAB() {
 
-    }
+    }*/
 
     /**
      * Приобразую введенные данные пользователем в стартовый графический метод
+     *
      * @return - класс графического метода с пользовательскими данными
      */
-    private GraphicalMethod serializeToGraph() {
+    /*private GraphicalMethod serializeToGraph() {
 
-    }
+    }*/
 }
