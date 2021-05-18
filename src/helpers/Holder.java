@@ -31,6 +31,11 @@ public class Holder {
      */
     public static Stage selectStage;
 
+    /**
+     * Сцена текущей решаемой задачи
+     */
+    public static Stage taskStage;
+
 
     public static String startedTaskFile() {
         /*if (current_task.equals("Симплекс метод")) {

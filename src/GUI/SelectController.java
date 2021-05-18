@@ -43,7 +43,9 @@ public class SelectController {
         select_end.setOnAction((ActionEvent event) -> {
             if (var_number.getValue() != null && sys_number.getValue() != null) {
                 try {
-                    Stage taskStartStage = ApplicationMenu.showNewStage(Holder.startedTaskFile(), Holder.current_task, 800, 800);
+                    Holder.var_number = (int) var_number.getValue();
+                    Holder.sys_number = (int) sys_number.getValue();
+                    Stage taskStartStage = ApplicationMenu.showNewStage(Holder.startedTaskFile(), Holder.current_task, 800, 500);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
