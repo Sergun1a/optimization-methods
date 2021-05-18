@@ -134,6 +134,9 @@ public class Fraction {
             long nok = MathMiddleware.nok(newDividend, newDivider);
             return new Fraction(newDividend / nok, newDivider / nok);
         }
+        if (futureFracture instanceof Integer) {
+            return new Fraction((Long) futureFracture, (long) 1);
+        }
         if (futureFracture instanceof Long) {
             return new Fraction((long) futureFracture, (long) 1);
         }

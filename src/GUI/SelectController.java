@@ -45,7 +45,7 @@ public class SelectController {
                 try {
                     Holder.var_number = (int) var_number.getValue();
                     Holder.sys_number = (int) sys_number.getValue();
-                    Stage taskStartStage = ApplicationMenu.showNewStage(Holder.startedTaskFile(), Holder.current_task, 800, 500);
+                    Stage taskStartStage = ApplicationMenu.showNewStage(Holder.startedTaskFile(), Holder.current_task, 800, 650);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

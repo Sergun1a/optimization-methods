@@ -15,6 +15,15 @@ import java.io.IOException;
 import java.util.Locale;
 
 public class ApplicationMenu {
+    public static int basisLabelRow = 23;
+    public static int basisInputRow = 24;
+
+    public static int functionLabelRow = 2;
+    public static int functionInputRow = 3;
+
+    public static int systemLabelRow = 5;
+    public static int systemInputRow = 6;
+
     private Stage stage;
     private Scene currentScene;
     private Menu currentMenu;
@@ -39,6 +48,15 @@ public class ApplicationMenu {
         newStage.setScene(newScene);
         newStage.show();
         return newStage;
+    }
+
+    public static Scene showScene(Stage stage, String filename, String title, Integer width, Integer height) throws IOException {
+        Parent sceneFromFile = FXMLLoader.load(ApplicationMenu.class.getResource("../GUI/fxml/" + filename));
+        stage.setTitle(title);
+        Scene newScene = new Scene(sceneFromFile, width, height);
+        stage.setScene(newScene);
+        stage.show();
+        return newScene;
     }
 
     /**
