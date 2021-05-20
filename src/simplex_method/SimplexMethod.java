@@ -20,7 +20,7 @@ public class SimplexMethod {
         return newArray;
     }
 
-    public SimplexMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) {
+    public SimplexMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) throws InvalidTypeException {
         type = u_type;
         function = u_function;
         system = u_system;
@@ -31,6 +31,18 @@ public class SimplexMethod {
         masterSlave = new int[function.length - 1];
         previous_steps.add(this);
         //previous_steps.listIterator(previous_steps.size()-1).previous();
+
+        //сохраняю информацию об основных и зависимых переменных
+        masterSlaveInfo();
+        // переставляю столбцы системы согласно полученному базису
+        gausTableBasisSwap();
+        // решаю систему методом гаусса
+        system = MathMiddleware.gaus(system);
+        // произвожу замены в  функции, отталкиваясь от решения метода гаусса
+        updateFunction();
+        // приводу матрицу гаусса к стартовой симплекс таблице
+        gausToSimplex();
+
     }
 
     /**
@@ -350,17 +362,6 @@ public class SimplexMethod {
     }
 
     public void solution() throws InvalidTypeException {
-        //сохраняю информацию об основных и зависимых переменных
-        masterSlaveInfo();
-        // переставляю столбцы системы согласно полученному базису
-        gausTableBasisSwap();
-        // решаю систему методом гаусса
-        system = MathMiddleware.gaus(system);
-        // произвожу замены в  функции, отталкиваясь от решения метода гаусса
-        updateFunction();
-        // приводу матрицу гаусса к стартовой симплекс таблице
-        gausToSimplex();
-
         // нахожу опорные элементы и считаю новые симплекс таблицы
         quickSolve();
     }

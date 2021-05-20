@@ -1,6 +1,7 @@
 package helpers;
 
 import javafx.stage.Stage;
+import simplex_method.SimplexMethod;
 
 /**
  * Класс для хранения переменных, которые должны быть доступны в нескольких местах
@@ -36,6 +37,11 @@ public class Holder {
      */
     public static Stage taskStage;
 
+    /**
+     * Класс для текущей решаемой задачи
+     */
+    public static Object taskClass;
+
 
     public static String startedTaskFile() {
         /*if (current_task.equals("Симплекс метод")) {
@@ -49,4 +55,6 @@ public class Holder {
         }*/
         return "task_start.fxml";
     }
+
+
 }

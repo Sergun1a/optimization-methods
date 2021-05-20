@@ -44,8 +44,18 @@ public class FileWorker {
         return file;
     }
 
+    private static File showSavingDialog(String title, String extensionLong, String extensionShort) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        FileChooser.ExtensionFilter extFilter =
+                new FileChooser.ExtensionFilter(extensionLong + " (*." + extensionShort + ")", "*." + extensionShort);
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showSaveDialog(new Stage());
+        return file;
+    }
+
     public static void saveFile(String content) {
-        File file = showOpeningDialog("Сохранить", "Custom text file", "txt");
+        File file = showSavingDialog("Сохранить", "Custom text file", "txt");
         if (file != null) {
             saveTextToFile(content, file);
         }
