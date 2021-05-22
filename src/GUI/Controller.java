@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import sample.ApplicationMenu;
-import sample.FileWorker;
+import helpers.FileWorker;
 import sample.Validator;
 
 import java.io.IOException;

@@ -1,6 +1,7 @@
 package GUI;
 
 import com.sun.jdi.InvalidTypeException;
+import helpers.FileWorker;
 import helpers.Fraction;
 import helpers.Holder;
 import javafx.event.ActionEvent;
@@ -12,6 +13,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import sample.ApplicationMenu;
 import simplex_method.SimplexMethod;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Окно с вводом стартовой задачи
@@ -68,6 +72,23 @@ public class TaskStartController {
      * @param actionEvent
      */
     public void runMethod(ActionEvent actionEvent) {
+        fileOpen.setOnAction((ActionEvent event) -> {
+            try {
+                HashMap<String, String> data = FileWorker.openFile();
+                /*TODO Дальше нужно присвоить полям новые значения, которые получили из файла*/
+                fillFieldsByFileData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        fileSave.setOnAction((ActionEvent event) -> {
+            /*TODO Здесь нужно получить значения полей которые будут записаны в файл и передать в функцию*/
+            String content = "";
+            content += FileWorker.attributeToString("type", Holder.current_task);
+            FileWorker.saveFile(content);
+        });
+
         quick_solve.setOnAction((ActionEvent event) -> {
             // если все введенные пользователем данные корректны, создаю класс задачи
             if (validate()) {
@@ -86,7 +107,9 @@ public class TaskStartController {
                 if (Holder.current_task.equals("Симплекс метод")) {
                     SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                     try {
+                        simplex.initiate();
                         simplex.makeStep();
+                        Holder.taskClass = simplex;
                     } catch (InvalidTypeException e) {
                         e.printStackTrace();
                     }
@@ -210,7 +233,7 @@ public class TaskStartController {
             }
         }
         Fraction[] basis = new Fraction[Holder.var_number - 1];
-        // проверяю данные для базиса
+        // задаю базис
         for (int i = 0; i < Holder.var_number - 1; i++) {
             try {
                 basis[i] = Fraction.toFraction(fieldValueType(((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText()));

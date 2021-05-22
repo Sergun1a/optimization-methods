@@ -8,7 +8,21 @@ import helpers.MathMiddleware;
  * Класс хранящий условия симплекс метода с искусственным базисом и методы его решающие
  */
 public class ArtificialBasic extends SimplexMethod {
-    public ArtificialBasic(String u_type, Fraction[] u_function, Fraction[][] u_system) {
+    /**
+     * Название аргументов нужных для работы метода. Нужно для сохранения и открытия файла
+     * @return массив аргументов
+     */
+    public static String[] fileArguments() {
+        return new String[]{
+                "type", // тип решаемой задачи
+                "sys_number", // кол-во уравнений в системе
+                "var_number", // кол-во уникальных переменных
+                "f", // указатель на коэффициент функции (пример полного вида f2,где 2 - указатель на номер переменной)
+                "s", // указатель на коэффициент системы (пример полного вида s1_2,где 2 - указатель на номер переменной, а 1 - номер уравнения в системе)
+        };
+    }
+
+    public ArtificialBasic(String u_type, Fraction[] u_function, Fraction[][] u_system) throws InvalidTypeException {
         super(u_type, u_function, u_system, new Fraction[u_system[0].length + u_system.length]);
     }
 

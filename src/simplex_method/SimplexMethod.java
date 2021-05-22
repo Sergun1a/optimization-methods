@@ -10,6 +10,21 @@ import java.util.LinkedList;
  * Класс хранящий условия симплекс метода и методы его решающие
  */
 public class SimplexMethod {
+    /**
+     * Название аргументов нужных для работы метода. Нужно для сохранения и открытия файла
+     * @return массив аргументов
+     */
+    public static String[] fileArguments() {
+        return new String[]{
+                "type", // тип решаемой задачи
+                "sys_number", // кол-во уравнений в системе
+                "var_number", // кол-во уникальных переменных
+                "f", // указатель на коэффициент функции (пример полного вида f2,где 2 - указатель на номер переменной)
+                "s", // указатель на коэффициент системы (пример полного вида s1_2,где 2 - указатель на номер переменной, а 1 - номер уравнения в системе)
+                "b", // указатель на коэффициент базиса (по сути идентичен f, только c не нужно)
+        };
+    }
+
     public static Fraction[][] cloneFractionArray(Fraction[][] array) {
         Fraction[][] newArray = new Fraction[array.length][array[0].length];
         for (int i = 0; i < array.length; i++) {
@@ -31,18 +46,6 @@ public class SimplexMethod {
         masterSlave = new int[function.length - 1];
         previous_steps.add(this);
         //previous_steps.listIterator(previous_steps.size()-1).previous();
-
-        //сохраняю информацию об основных и зависимых переменных
-        masterSlaveInfo();
-        // переставляю столбцы системы согласно полученному базису
-        gausTableBasisSwap();
-        // решаю систему методом гаусса
-        system = MathMiddleware.gaus(system);
-        // произвожу замены в  функции, отталкиваясь от решения метода гаусса
-        updateFunction();
-        // приводу матрицу гаусса к стартовой симплекс таблице
-        gausToSimplex();
-
     }
 
     /**
@@ -302,7 +305,7 @@ public class SimplexMethod {
      * @return строку и столбец выбранного опорного элемента
      * @throws InvalidTypeException
      */
-    protected int[] makeStep() throws InvalidTypeException {
+    public int[] makeStep() throws InvalidTypeException {
         int[] element = pickupElement();
         if (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
@@ -346,6 +349,7 @@ public class SimplexMethod {
      * @throws InvalidTypeException
      */
     protected int[] quickSolve() throws InvalidTypeException {
+        initiate();
         int[] element = pickupElement();
         while (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
@@ -359,6 +363,19 @@ public class SimplexMethod {
             System.out.println("Система не имеет решения");
         }
         return element;
+    }
+
+    public void initiate() throws InvalidTypeException {
+        //сохраняю информацию об основных и зависимых переменных
+        masterSlaveInfo();
+        // переставляю столбцы системы согласно полученному базису
+        gausTableBasisSwap();
+        // решаю систему методом гаусса
+        system = MathMiddleware.gaus(system);
+        // произвожу замены в  функции, отталкиваясь от решения метода гаусса
+        updateFunction();
+        // приводу матрицу гаусса к стартовой симплекс таблице
+        gausToSimplex();
     }
 
     public void solution() throws InvalidTypeException {

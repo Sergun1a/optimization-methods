@@ -1,9 +1,11 @@
-package sample;
+package helpers;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sample.Validator;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,16 +57,16 @@ public class FileWorker {
     }
 
     public static void saveFile(String content) {
-        File file = showSavingDialog("Сохранить", "Custom text file", "txt");
+        File file = showSavingDialog("Сохранить", "optimization method task file", "om");
         if (file != null) {
             saveTextToFile(content, file);
         }
     }
 
 
-    public static HashMap<String, Object> openFile() throws IOException {
-        HashMap<String, Object> fileData = new HashMap<String, Object>();
-        File file = showOpeningDialog("Открыть", "Custom text file", "txt");
+    public static HashMap<String, String> openFile() throws IOException {
+        HashMap<String, String> fileData = new HashMap<String, String>();
+        File file = showOpeningDialog("Открыть", "optimization method task file", "om");
         if (file != null) {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -72,11 +74,8 @@ public class FileWorker {
                 String[] splittedLine = line.split(" => ", 2);
                 while (line != null) {
                     splittedLine = line.split(" => ", 2);
-                    if (splittedLine.length == 2) {
-                        if (Validator.validate(getAttributesValidators().
-                                get(splittedLine[0].trim()), splittedLine[1])) {
-                            fileData.put(splittedLine[0].trim(), splittedLine[1]);
-                        }
+                    if (splittedLine.length == 2 && Arrays.asList(Holder.fileArgumentsForTask()).contains(splittedLine[0].trim())) {
+                        fileData.put(splittedLine[0].trim(), splittedLine[1].toString().trim());
                     }
                     line = reader.readLine();
                 }
@@ -86,5 +85,13 @@ public class FileWorker {
             }
         }
         return fileData;
+    }
+
+    public static String attributeToString(String field, String value) {
+        if (Validator.validate(FileWorker.getAttributesValidators().
+                get(field), value)) {
+            return field.trim() + " => " + value.trim() + "\n";
+        }
+        return "";
     }
 }

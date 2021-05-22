@@ -1,6 +1,7 @@
 package helpers;
 
 import javafx.stage.Stage;
+import simplex_method.ArtificialBasic;
 import simplex_method.SimplexMethod;
 
 /**
@@ -56,5 +57,13 @@ public class Holder {
         return "task_start.fxml";
     }
 
-
+    public static String[] fileArgumentsForTask() {
+        if (taskClass instanceof SimplexMethod) {
+            return SimplexMethod.fileArguments();
+        }
+        if (taskClass instanceof ArtificialBasic) {
+            return ArtificialBasic.fileArguments();
+        }
+        return new String[]{};
+    }
 }
