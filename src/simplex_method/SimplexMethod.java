@@ -349,7 +349,6 @@ public class SimplexMethod {
      * @throws InvalidTypeException
      */
     protected int[] quickSolve() throws InvalidTypeException {
-        initiate();
         int[] element = pickupElement();
         while (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
@@ -379,7 +378,7 @@ public class SimplexMethod {
     }
 
     public void solution() throws InvalidTypeException {
-        // нахожу опорные элементы и считаю новые симплекс таблицы
+        initiate();
         quickSolve();
     }
 }

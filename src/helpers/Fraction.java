@@ -63,7 +63,7 @@ public class Fraction {
         long newDivider = first.getDivider() * second.getDivider();
         long nok = MathMiddleware.nok(newDividend, newDivider);
 
-        return new Fraction(newDividend / nok, newDivider / nok);
+        return toStandartFraction(new Fraction(newDividend / nok, newDivider / nok));
     }
 
     /**
