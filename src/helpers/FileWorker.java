@@ -74,7 +74,7 @@ public class FileWorker {
                 String[] splittedLine = line.split(" => ", 2);
                 while (line != null) {
                     splittedLine = line.split(" => ", 2);
-                    if (splittedLine.length == 2 && Arrays.asList(Holder.fileArgumentsForTask()).contains(splittedLine[0].trim())) {
+                    if (splittedLine.length == 2) {
                         fileData.put(splittedLine[0].trim(), splittedLine[1].toString().trim());
                     }
                     line = reader.readLine();
@@ -88,10 +88,6 @@ public class FileWorker {
     }
 
     public static String attributeToString(String field, String value) {
-        if (Validator.validate(FileWorker.getAttributesValidators().
-                get(field), value)) {
-            return field.trim() + " => " + value.trim() + "\n";
-        }
-        return "";
+        return field.trim() + " => " + value.trim() + "\n";
     }
 }

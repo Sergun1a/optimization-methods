@@ -1,13 +1,12 @@
 package GUI;
 
 
+import helpers.FileWorker;
 import helpers.Holder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 import sample.ApplicationMenu;
-import helpers.FileWorker;
 import sample.Validator;
 
 import java.io.IOException;

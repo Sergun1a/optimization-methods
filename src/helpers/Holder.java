@@ -4,6 +4,8 @@ import javafx.stage.Stage;
 import simplex_method.ArtificialBasic;
 import simplex_method.SimplexMethod;
 
+import java.util.HashMap;
+
 /**
  * Класс для хранения переменных, которые должны быть доступны в нескольких местах
  */
@@ -42,6 +44,11 @@ public class Holder {
      * Класс для текущей решаемой задачи
      */
     public static Object taskClass;
+
+    /**
+     * Данные из открытого файла
+     */
+    public static HashMap<String, String> fileData;
 
 
     public static String startedTaskFile() {

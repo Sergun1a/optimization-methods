@@ -36,23 +36,40 @@ public class TaskStartController {
     @FXML
     private MenuItem fileOpen;
 
+
+    private String cellValue(String type, int i) {
+        if (Holder.fileData == null) {
+            return null;
+        } else {
+            return Holder.fileData.get(type + i);
+        }
+    }
+
+    private String cellValue(String type, int i, int j) {
+        if (Holder.fileData == null) {
+            return null;
+        } else {
+            return Holder.fileData.get(type + i + "_" + j);
+        }
+    }
+
     @FXML
     private void initialize() {
         // делаю текстовые поля для функции и подписи
         for (int i = 0; i < Holder.var_number - 1; i++) {
             gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.functionLabelRow);
             gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.systemLabelRow);
-            gridPane.add(new TextField(), i, ApplicationMenu.functionInputRow);
+            gridPane.add(new TextField(cellValue("f", i)), i, ApplicationMenu.functionInputRow);
         }
         // константа для функции и системы
         gridPane.add(new Text("C"), Holder.var_number - 1, ApplicationMenu.functionLabelRow);
         gridPane.add(new Text("C"), Holder.var_number - 1, ApplicationMenu.systemLabelRow);
-        gridPane.add(new TextField(), Holder.var_number - 1, ApplicationMenu.functionInputRow);
+        gridPane.add(new TextField(cellValue("f", Holder.var_number - 1)), Holder.var_number - 1, ApplicationMenu.functionInputRow);
 
         // делаю текстовые поля для системы
         for (int j = ApplicationMenu.systemInputRow; j < Holder.sys_number + ApplicationMenu.systemInputRow; j++) {
             for (int i = 0; i < Holder.var_number; i++) {
-                gridPane.add(new TextField(), i, j);
+                gridPane.add(new TextField(cellValue("s", j - ApplicationMenu.systemInputRow + 1, i)), i, j);
             }
         }
 
@@ -61,9 +78,10 @@ public class TaskStartController {
             // делаю текстовые поля для базиса и подписи
             for (int i = 0; i < Holder.var_number - 1; i++) {
                 gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.basisLabelRow);
-                gridPane.add(new TextField(), i, ApplicationMenu.basisInputRow);
+                gridPane.add(new TextField(cellValue("b", i)), i, ApplicationMenu.basisInputRow);
             }
         }
+        Holder.fileData = null;
     }
 
     /**
@@ -75,7 +93,7 @@ public class TaskStartController {
         fileOpen.setOnAction((ActionEvent event) -> {
             try {
                 HashMap<String, String> data = FileWorker.openFile();
-                /*TODO Дальше нужно присвоить полям новые значения, которые получили из файла*/
+                Holder.fileData = data;
                 fillFieldsByFileData(data);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -86,12 +104,29 @@ public class TaskStartController {
             /*TODO Здесь нужно получить значения полей которые будут записаны в файл и передать в функцию*/
             String content = "";
             content += FileWorker.attributeToString("type", Holder.current_task);
+            content += FileWorker.attributeToString("var_number", Integer.toString(Holder.var_number));
+            content += FileWorker.attributeToString("sys_number", Integer.toString(Holder.sys_number));
+            for (int i = 0; i < Holder.var_number; i++) {
+                content += FileWorker.attributeToString("f" + i, ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.functionInputRow)).getText());
+            }
+            for (int j = ApplicationMenu.systemInputRow; j < Holder.sys_number + ApplicationMenu.systemInputRow; j++) {
+                for (int i = 0; i < Holder.var_number; i++) {
+                    content += FileWorker.attributeToString("s" + (j - ApplicationMenu.systemInputRow + 1) + "_" + i, ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, j)).getText());
+                }
+            }
+
+            if (Holder.current_task.equals("Симплекс метод")) {
+                for (int i = 0; i < Holder.var_number-1; i++) {
+                    content += FileWorker.attributeToString("b" + i, ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText());
+                }
+            }
             FileWorker.saveFile(content);
         });
 
         quick_solve.setOnAction((ActionEvent event) -> {
             // если все введенные пользователем данные корректны, создаю класс задачи
             if (validate()) {
+                serializeToSimplex();
                 if (Holder.current_task.equals("Симплекс метод")) {
                     SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                     try {
@@ -121,7 +156,7 @@ public class TaskStartController {
     /**
      * Заполняю поля данными из файла
      */
-    private void fillFieldsByFileData(HashMap<String, String> data) {
+    private void fillFieldsByFileData(HashMap<String, String> data) throws IOException {
         if (!data.get("type").equals(Holder.current_task)) {
             ApplicationMenu.showAlert("warning", "Типы задач не совпадают", "",
                     "Тип решаемой вами задачи и задачи в файле не совпадают. Вероятна потеря информации или необходимость ввести недостающие данные");
@@ -136,10 +171,9 @@ public class TaskStartController {
                     "Некорректно указаны параметры: `sys_number` или(и) `var_number`");
             return;
         }
-        // заполняю функцию
-        for (int i = 0; i < var_number; i++) {
-            ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.functionInputRow)).setText(data.get("f" + i));
-        }
+        Holder.var_number = var_number;
+        Holder.sys_number = sys_number;
+        ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, 800, 650);
     }
 
     /**
