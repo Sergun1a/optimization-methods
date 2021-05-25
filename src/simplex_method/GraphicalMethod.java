@@ -10,7 +10,7 @@ public class GraphicalMethod extends ArtificialBasic {
 
     public GraphicalMethod(String u_type, Fraction[] u_function, Fraction[][] u_system) throws InvalidTypeException {
         super(u_type, u_function, u_system);
-        originalSize = system.length;
+        originalSize = system[0].length;
     }
 
     /**
@@ -88,7 +88,7 @@ public class GraphicalMethod extends ArtificialBasic {
             return;
         }
         // нужно оставить только оригинальные переменные
-        deleteTemporalVariables();
+        // deleteTemporalVariables();
         // обновляю функцию согласно решению AB
         updateFunction();
         // получаю уравнения прямых для отрисовки
@@ -97,5 +97,20 @@ public class GraphicalMethod extends ArtificialBasic {
         fromArtificalToSimplex();
         // решаю симплекс таблицу
         quickSolve();
+    }
+
+    /**
+     * Вывод решения графического метода
+     */
+    @Override
+    public void printSolution() throws InvalidTypeException {
+        for (int i = 0; i < originalSize - 1; i++) {
+            if (masterSlave[i] <= 0) {
+                System.out.println("x" + (i + 1) + " = " + 0);
+            } else {
+                System.out.println("x" + (i + 1) + " = " + system[masterSlave[i] - 1][system[masterSlave[i] - 1].length - 1]);
+            }
+        }
+        System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
     }
 }

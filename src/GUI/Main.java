@@ -6,7 +6,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import sample.ApplicationMenu;
 import simplex_method.GraphicalMethod;
-import simplex_method.SimplexMethod;
 
 
 public class Main extends Application {
@@ -29,15 +28,15 @@ public class Main extends Application {
 
 
             // граф. метод тест
-            /*GraphicalMethod graph = new GraphicalMethod(
+            GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -1), Fraction.toFraction((long) -1)},
                     new Fraction[][]{
                             {Fraction.toFraction((long) 2), Fraction.toFraction((long) 3), Fraction.toFraction((long) 36)},
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 13)},
                     }
-            );*/
-           /* GraphicalMethod graph = new GraphicalMethod(
+            );
+           /*GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -9), Fraction.toFraction((long) -11)},
                     new Fraction[][]{
@@ -45,7 +44,7 @@ public class Main extends Application {
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 8)},
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 5)},
                     }
-            );*/
+            );
             /*GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -4), Fraction.toFraction((long) -4)},
@@ -55,7 +54,7 @@ public class Main extends Application {
                             {Fraction.toFraction((long) 0), Fraction.toFraction((long) 1), Fraction.toFraction((long) 18)},
                     }
             );*/
-            GraphicalMethod graph = new GraphicalMethod(
+            /*GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) 1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 1)},
                     new Fraction[][]{
@@ -63,7 +62,7 @@ public class Main extends Application {
                             {Fraction.toFraction((long) 2), Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 1)},
                             {Fraction.toFraction("1/2"), Fraction.toFraction("3/4"), Fraction.toFraction((long) 0), Fraction.toFraction((long) 1)},
                     }
-            );
+            );*/
             /*GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -1), Fraction.toFraction((long) 1), Fraction.toFraction((long) -1), Fraction.toFraction((long) 1)},
