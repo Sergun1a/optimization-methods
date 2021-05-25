@@ -4,12 +4,12 @@ import com.sun.jdi.InvalidTypeException;
 import helpers.Fraction;
 import helpers.MathMiddleware;
 
-public class GraphicalMethod extends ArtificialBasic {
+public class GraphicalMethod extends SimplexMethod {
     Fraction[][] artificialBasis;
     private int originalSize;
 
-    public GraphicalMethod(String u_type, Fraction[] u_function, Fraction[][] u_system) throws InvalidTypeException {
-        super(u_type, u_function, u_system);
+    public GraphicalMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) throws InvalidTypeException {
+        super(u_type, u_function, u_system, u_basis);
         originalSize = system[0].length;
     }
 
@@ -69,33 +69,8 @@ public class GraphicalMethod extends ArtificialBasic {
     @Override
     public void solution() throws InvalidTypeException {
         // привожу систему к системе равенств
-        toEquality();
-        // устанавливаю стартовую информацию о зависимых и основных переменных
-        setABMasterSlave();
-        // привожу систему к стартовой таблице искуственного базиса
-        toArtificialBasisTable();
-        // считаю таблицу искусственного базиса
-        int[] element = new int[]{0, 0};
-        while (!emptyABLastRow() && element[0] != -1) {
-            element = makeStep();
-            if (element[0] != -1) {
-                system = MathMiddleware.deleteCol(system, element[1]);
-                deleteVariable(-(element[1] + 1));
-            }
-        }
-        if ((element[0] == -1 && element[1] != -1) || !emptyABLastRow()) {
-            System.out.println("Искусственный базис не имеет решения");
-            return;
-        }
-        // нужно оставить только оригинальные переменные
-        // deleteTemporalVariables();
-        // обновляю функцию согласно решению AB
-        updateFunction();
-        // получаю уравнения прямых для отрисовки
-        Fraction[][] lines = getLines();
-        // привожу матрицу искусственного базиса к стартовой таблице симплекс метода
-        fromArtificalToSimplex();
-        // решаю симплекс таблицу
+        //toEquality();
+        initiate();
         quickSolve();
     }
 

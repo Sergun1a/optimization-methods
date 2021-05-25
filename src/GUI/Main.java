@@ -28,22 +28,25 @@ public class Main extends Application {
 
 
             // граф. метод тест
-            GraphicalMethod graph = new GraphicalMethod(
+            /*GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -1), Fraction.toFraction((long) -1)},
                     new Fraction[][]{
                             {Fraction.toFraction((long) 2), Fraction.toFraction((long) 3), Fraction.toFraction((long) 36)},
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 13)},
-                    }
-            );
-           /*GraphicalMethod graph = new GraphicalMethod(
+                    },
+                    new Fraction[]{Fraction.toFraction((long) -1), Fraction.toFraction((long) -1)}
+            )*/
+            ;
+            GraphicalMethod graph = new GraphicalMethod(
                     "min",
                     new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -9), Fraction.toFraction((long) -11)},
                     new Fraction[][]{
                             {Fraction.toFraction((long) 4), Fraction.toFraction((long) 3), Fraction.toFraction((long) 10)},
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 8)},
                             {Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 5)},
-                    }
+                    },
+                    new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 1)}
             );
             /*GraphicalMethod graph = new GraphicalMethod(
                     "min",
