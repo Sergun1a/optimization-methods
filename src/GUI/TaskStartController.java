@@ -76,7 +76,7 @@ public class TaskStartController {
             try {
                 HashMap<String, String> data = FileWorker.openFile();
                 /*TODO Дальше нужно присвоить полям новые значения, которые получили из файла*/
-                fillFieldsByFileData();
+                fillFieldsByFileData(data);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -121,8 +121,25 @@ public class TaskStartController {
     /**
      * Заполняю поля данными из файла
      */
-    private void fillFieldsByFileData() {
-
+    private void fillFieldsByFileData(HashMap<String, String> data) {
+        if (!data.get("type").equals(Holder.current_task)) {
+            ApplicationMenu.showAlert("warning", "Типы задач не совпадают", "",
+                    "Тип решаемой вами задачи и задачи в файле не совпадают. Вероятна потеря информации или необходимость ввести недостающие данные");
+        }
+        int var_number = 0;
+        int sys_number = 0;
+        try {
+            var_number = Integer.parseInt(data.get("var_number"));
+            sys_number = Integer.parseInt(data.get("sys_number"));
+        } catch (NumberFormatException ex) {
+            ApplicationMenu.showAlert("error", "Неверный формат файла", "",
+                    "Некорректно указаны параметры: `sys_number` или(и) `var_number`");
+            return;
+        }
+        // заполняю функцию
+        for (int i = 0; i < var_number; i++) {
+            ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.functionInputRow)).setText(data.get("f" + i));
+        }
     }
 
     /**

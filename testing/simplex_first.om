@@ -1,4 +1,4 @@
-type => simplexMethod
+type => Симплекс метод
 var_number => 4
 sys_number => 2
 s1_0 => 1

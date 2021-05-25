@@ -64,8 +64,8 @@
          <menus>
             <Menu mnemonicParsing="false" text="Файл">
                <items>
-                  <MenuItem id="fileOpen" fx:id="fileOpen" mnemonicParsing="false" onAction="#initialize" text="Открыть…" />
-                  <MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#initialize" text="Сохранить" />
+                  <MenuItem id="fileOpen" fx:id="fileOpen" mnemonicParsing="false" onAction="#runMethod" text="Открыть…" />
+                  <MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#runMethod" text="Сохранить" />
                   <MenuItem mnemonicParsing="false" text="Quit" />
                </items>
             </Menu>

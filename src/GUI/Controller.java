@@ -40,8 +40,7 @@ public class Controller {
         simplex_start.setOnAction((ActionEvent event) -> {
             // вывожу окно с выбором количества переменных и количества уравнений в системе
             try {
-                Stage simplexStage = ApplicationMenu.showNewStage("select.fxml", "Выбор", 300, 300);
-                Holder.selectStage = simplexStage;
+                ApplicationMenu.showScene(Holder.primaryStage,"select.fxml", "Выбор", 300, 300);
                 Holder.current_task = "Симплекс метод";
             } catch (IOException e) {
                 e.printStackTrace();
