@@ -36,6 +36,14 @@ public class SimplexMethod {
         return newArray;
     }
 
+    public static Fraction[] cloneFractionArray(Fraction[] array) {
+        Fraction[] newArray = new Fraction[array.length];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        return newArray;
+    }
+
     public SimplexMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) throws InvalidTypeException {
         type = u_type;
         function = u_function;
@@ -280,7 +288,7 @@ public class SimplexMethod {
         Fraction[][] simplexTable = new Fraction[system.length + 1][system[0].length - system.length];
         for (int i = 0; i < system.length + 1; i++) {
             for (int j = 0; j < system[0].length - system.length; j++) {
-                simplexTable[i][j] = Fraction.toFraction((long)0);
+                simplexTable[i][j] = Fraction.toFraction((long) 0);
             }
         }
 
