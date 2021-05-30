@@ -188,13 +188,14 @@ public class Main extends Application {
                     }
 
             );*/
-        ArtificialBasic abasis = new ArtificialBasic(
+        GraphicalMethod abasis = new GraphicalMethod(
                 "min",
                 new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -2), Fraction.toFraction((long) -1), Fraction.toFraction((long) -3), Fraction.toFraction((long) -1)},
                 new Fraction[][]{
                         {Fraction.toFraction((long) 1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 5), Fraction.toFraction((long) -1), Fraction.toFraction((long) 4)},
                         {Fraction.toFraction((long) 1), Fraction.toFraction((long) -1), Fraction.toFraction((long) -1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 1)},
-                }
+                },
+                new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 0)}
         );
         abasis.solution();
         /*} catch (InvalidTypeException ex) {

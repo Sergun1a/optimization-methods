@@ -12,6 +12,7 @@ import java.util.LinkedList;
 public class SimplexMethod {
     /**
      * Название аргументов нужных для работы метода. Нужно для сохранения и открытия файла
+     *
      * @return массив аргументов
      */
     public static String[] fileArguments() {
@@ -277,6 +278,13 @@ public class SimplexMethod {
      */
     protected void gausToSimplex() throws InvalidTypeException {
         Fraction[][] simplexTable = new Fraction[system.length + 1][system[0].length - system.length];
+        for (int i = 0; i < system.length + 1; i++) {
+            for (int j = 0; j < system[0].length - system.length; j++) {
+                simplexTable[i][j] = Fraction.toFraction((long)0);
+            }
+        }
+
+
         // отрезаю от гаусса основные переменные
         for (int i = 0; i < system.length; i++) {
             for (int j = system.length; j < system[0].length; j++) {

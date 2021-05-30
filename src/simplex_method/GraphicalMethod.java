@@ -1,11 +1,12 @@
 package simplex_method;
 
 import com.sun.jdi.InvalidTypeException;
+import helpers.Draw;
 import helpers.Fraction;
-import helpers.MathMiddleware;
+
+import java.awt.*;
 
 public class GraphicalMethod extends SimplexMethod {
-    Fraction[][] artificialBasis;
     private int originalSize;
 
     public GraphicalMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) throws InvalidTypeException {
@@ -30,6 +31,8 @@ public class GraphicalMethod extends SimplexMethod {
 
     private void toEquality() throws InvalidTypeException {
         Fraction[][] newSystem = new Fraction[system.length][system[0].length + system.length];
+        Fraction[] newBasis = new Fraction[system[0].length + system.length - 1];
+
         for (int i = 0; i < system.length; i++) {
             // заношу всю систему, кроме последнего столбца с константами
             for (int j = 0; j < system[i].length - 1; j++) {
@@ -54,22 +57,25 @@ public class GraphicalMethod extends SimplexMethod {
         for (int i = function.length; i < function.length + system.length; i++) {
             newFunction[i] = Fraction.toFraction((long) 0);
         }
+        // обновляю базис
+        for (int i = 0; i < basis.length; i++) {
+            newBasis[i] = basis[i];
+        }
+        for (int i = basis.length; i < system[0].length + system.length - 1; i++) {
+            newBasis[i] = Fraction.toFraction((long) 0);
+        }
+
         system = newSystem;
         function = newFunction;
+        basis = newBasis;
+        masterSlave = new int[function.length - 1];
     }
-
-    /**
-     * Удаляю временные переменные необходимые для решения симплекс метода
-     */
-    private void deleteTemporalVariables() {
-
-    }
-
 
     @Override
     public void solution() throws InvalidTypeException {
         // привожу систему к системе равенств
-        //toEquality();
+        toEquality();
+        // решаю симплекс
         initiate();
         quickSolve();
     }
@@ -79,6 +85,7 @@ public class GraphicalMethod extends SimplexMethod {
      */
     @Override
     public void printSolution() throws InvalidTypeException {
+        Draw draw = new Draw();
         for (int i = 0; i < originalSize - 1; i++) {
             if (masterSlave[i] <= 0) {
                 System.out.println("x" + (i + 1) + " = " + 0);
@@ -87,5 +94,7 @@ public class GraphicalMethod extends SimplexMethod {
             }
         }
         System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
+        draw.addLine(100, 100, 0, 0, Color.blue);
+        draw.show();
     }
 }
