@@ -58,10 +58,11 @@ public class GraphicalMethod extends SimplexMethod {
 
     // проверяют, что линия лежит во второй четверти
     private boolean validLine(Dot d1, Dot d2) {
-        if (d1.x >= 0 && d1.y >= 0 && d2.x >= 0 && d2.y >= 0) {
+        return true;
+        /*if (d1.x >= 0 && d1.y >= 0 && d2.x >= 0 && d2.y >= 0) {
             return true;
         }
-        return false;
+        return false;*/
     }
 
     public GraphicalMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis) throws InvalidTypeException {
@@ -123,7 +124,8 @@ public class GraphicalMethod extends SimplexMethod {
         // точки решения
         Fraction x = new Fraction((long) 0, (long) 1);
         Fraction y = new Fraction((long) 0, (long) 1);
-
+        int i1 = 0;
+        int i2 = 0;
 
         copy_function = cloneFractionArray(function);
         //сохраняю информацию об основных и зависимых переменных
@@ -146,7 +148,7 @@ public class GraphicalMethod extends SimplexMethod {
                     Fraction y_dot = Fraction.divisionFractions(subSystem[0][2], subSystem[0][1]);
                     Dot d2 = (new Dot(Fraction.toFraction((long) 0), y_dot));
                     if (validLine(d1, d2))
-                        draw.addLine(d1.x * scale, d1.y * scale, d2.x * scale, d2.y * scale, Color.blue);
+                        draw.addRay(d1.x * scale, d1.y * scale, d2.x * scale, d2.y * scale, Color.blue);
 
 
                     x_dot = Fraction.divisionFractions(subSystem[1][2], subSystem[1][0]);
@@ -154,7 +156,7 @@ public class GraphicalMethod extends SimplexMethod {
                     y_dot = Fraction.divisionFractions(subSystem[1][2], subSystem[1][1]);
                     Dot d4 = (new Dot(Fraction.toFraction((long) 0), y_dot));
                     if (validLine(d3, d4))
-                        draw.addLine(d3.x * scale, d3.y * scale, d4.x * scale, d4.y * scale, Color.blue);
+                        draw.addRay(d3.x * scale, d3.y * scale, d4.x * scale, d4.y * scale, Color.blue);
 
                     subSystem = MathMiddleware.gaus(subSystem);
                     // получаю решение
@@ -168,13 +170,12 @@ public class GraphicalMethod extends SimplexMethod {
                         min_func_value = func_value;
                         x = x_dot;
                         y = y_dot;
+                        i1 = 1;
+                        i2 = 2;
                     }
                     // коэффициенты функции
                     f_x = Fraction.multiplyFractions(function[1], Fraction.toFraction((long) -1));
                     f_y = Fraction.multiplyFractions(function[2], Fraction.toFraction((long) -1));
-                    System.out.println("x1 = " + x.toString());
-                    System.out.println("x2 = " + y.toString());
-                    System.out.println("f = " + min_func_value.toString());
                 }
                 // если больше двух переменных
                 if (system[0].length > 3) {
@@ -198,37 +199,53 @@ public class GraphicalMethod extends SimplexMethod {
                     Dot d1 = (new Dot(x_dot, Fraction.toFraction((long) 0)));
                     Fraction y_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_2]);
                     Dot d2 = (new Dot(Fraction.toFraction((long) 0), y_dot));
+                    Fraction[] eq1_solve = new Fraction[]{x_dot, y_dot};
                     if (validLine(d1, d2))
-                        draw.addLine(d1.x * scale, d1.y * scale, d2.x * scale, d2.y * scale, Color.blue);
+                        draw.addRay(d1.x * scale, d1.y * scale, d2.x * scale, d2.y * scale, Color.blue);
 
                     x_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_1]);
                     Dot d3 = (new Dot(x_dot, Fraction.toFraction((long) 0)));
                     y_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_2]);
                     Dot d4 = (new Dot(Fraction.toFraction((long) 0), y_dot));
+                    Fraction[] eq2_solve = new Fraction[]{x_dot, y_dot};
                     if (validLine(d3, d4))
-                        draw.addLine(d3.x * scale, d3.y * scale, d4.x * scale, d4.y * scale, Color.blue);
+                        draw.addRay(d3.x * scale, d3.y * scale, d4.x * scale, d4.y * scale, Color.blue);
 
                     // получаю значения основных переменных через зависимые
+                    int master_i = findVar(i + 1);
+                    int master_j = findVar(j + 1);
 
+                    Fraction coef_val_1 = Fraction.multiplyFractions(eq1_solve[0], subSystem[0][slave_1]);
+                    Fraction coef_val_2 = Fraction.multiplyFractions(eq1_solve[1], subSystem[0][slave_2]);
 
-                    // получаю решение
-                    x_dot = Fraction.divisionFractions(subSystem[0][2], subSystem[0][slave_1]);
-                    y_dot = Fraction.divisionFractions(subSystem[1][2], subSystem[1][slave_2]);
+                    Fraction slave_var_1 = Fraction.summFractions(coef_val_1, coef_val_2);
+                    x_dot = Fraction.subtractionFractions(slave_var_1, subSystem[0][const_val]);
+
+                    coef_val_1 = Fraction.multiplyFractions(eq2_solve[0], subSystem[1][slave_1]);
+                    coef_val_2 = Fraction.multiplyFractions(eq2_solve[1], subSystem[1][slave_2]);
+                    slave_var_1 = Fraction.summFractions(coef_val_1, coef_val_2);
+                    y_dot = Fraction.subtractionFractions(slave_var_1, subSystem[1][const_val]);
+
                     // получаю значение функции
-                    Fraction x1_value = Fraction.multiplyFractions(function[slave_1 + 1], x_dot);
-                    Fraction x2_value = Fraction.multiplyFractions(function[slave_2 + 1], y_dot);
+                    Fraction x1_value = Fraction.multiplyFractions(function[master_i + 1], x_dot);
+                    Fraction x2_value = Fraction.multiplyFractions(function[master_j + 1], y_dot);
                     Fraction func_value = Fraction.summFractions(Fraction.summFractions(x1_value, x2_value), function[0]);
                     if (Fraction.lowerThen(func_value, min_func_value)) {
                         min_func_value = func_value;
                         x = x_dot;
                         y = y_dot;
+                        // коэффициенты функции
+                        f_x = Fraction.multiplyFractions(function[slave_1 + 1], Fraction.toFraction((long) -1));
+                        f_y = Fraction.multiplyFractions(function[slave_2 + 1], Fraction.toFraction((long) -1));
+                        i1 = master_i + 1;
+                        i2 = master_j + 1;
                     }
-                    // коэффициенты функции
-                    f_x = Fraction.multiplyFractions(function[1], Fraction.toFraction((long) -1));
-                    f_y = Fraction.multiplyFractions(function[2], Fraction.toFraction((long) -1));
                 }
             }
         }
+        System.out.println("x" + i1 + " = " + x.toString());
+        System.out.println("x" + i2 + " = " + y.toString());
+        System.out.println("f = " + min_func_value.toString());
         // вектор антинормали
         Dot av = new Dot(f_x, f_y);
         draw.addLine(0, 0, av.x * scale, av.y * scale, Color.red);

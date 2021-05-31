@@ -14,6 +14,10 @@ public class Fraction {
             fraction.setDivider(-fraction.getDivider());
             fraction.setDividend(-fraction.getDividend());
         }
+        if (fraction.getDivider() == 0) {
+            fraction.setDivider((long) 1);
+            fraction.setDividend((long) 0);
+        }
 
         return fraction;
     }

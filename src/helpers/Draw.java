@@ -24,6 +24,8 @@ class LinesComponent extends JComponent {
 
     private final LinkedList<Line> lines = new LinkedList<Line>();
 
+    private final LinkedList<Line> rays = new LinkedList<Line>();
+
     public void addLine(int x1, int x2, int x3, int x4) {
         addLine(x1, x2, x3, x4, Color.black);
     }
@@ -33,19 +35,47 @@ class LinesComponent extends JComponent {
         repaint();
     }
 
+    public void addRay(int x1, int x2, int x3, int x4, Color color) {
+        rays.add(new Line(x1, x2, x3, x4, color));
+        repaint();
+    }
+
     public void clearLines() {
         lines.clear();
         repaint();
+    }
+
+    public void clearRays() {
+        rays.clear();
+        repaint();
+    }
+
+    // получаю функцию по двум точкам и возвращаю значение в точке x
+    private int f_value(int x1, int y1, int x2, int y2, int x) {
+        double y = ((double) (x - x1) / (double) (x2 - x1)) * (y2 - y1) - y1;
+        return (int) Math.round(y);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         int widthCenter = Math.round((int) ((double) this.size().width / (double) 2));
         int heightCenter = Math.round((int) ((double) this.size().height / (double) 2));
+        int width = (int) this.size().width;
+        int height = (int) this.size().height;
+
         super.paintComponent(g);
         for (Line line : lines) {
             g.setColor(line.color);
             g.drawLine(widthCenter + line.x1, heightCenter - line.y1, widthCenter + line.x2, heightCenter - line.y2);
+        }
+        for (Line line : rays) {
+            g.setColor(line.color);
+            if ((line.x1 < line.x2) || (line.x1 == line.x2 && (line.y1 <= line.y2))) {
+                g.drawLine(widthCenter + line.x1, heightCenter - line.y1, widthCenter + width, heightCenter - f_value(line.x1, line.y1, line.x2, line.y2, width));
+            } else if ((line.x1 > line.x2) || (line.x1 == line.x2 && (line.y1 > line.y2))) {
+                g.drawLine(widthCenter + line.x2, heightCenter - line.y2, widthCenter + width, heightCenter - f_value(line.x2, line.y2, line.x1, line.y1, width));
+            }
+
         }
     }
 }
@@ -73,6 +103,11 @@ public class Draw {
     public void addLine(int x1, int y1, int x2, int y2, Color color) {
         Color randomColor = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
         comp.addLine(x1, y1, x2, y2, color);
+    }
+
+    public void addRay(int x1, int y1, int x2, int y2, Color color) {
+        Color randomColor = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
+        comp.addRay(x1, y1, x2, y2, color);
     }
 
     public void clearLines() {
