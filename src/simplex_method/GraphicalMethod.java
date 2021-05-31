@@ -230,7 +230,8 @@ public class GraphicalMethod extends SimplexMethod {
                     Fraction x1_value = Fraction.multiplyFractions(function[master_i + 1], x_dot);
                     Fraction x2_value = Fraction.multiplyFractions(function[master_j + 1], y_dot);
                     Fraction func_value = Fraction.summFractions(Fraction.summFractions(x1_value, x2_value), function[0]);
-                    if (Fraction.lowerThen(func_value, min_func_value)) {
+                    if (Fraction.lowerThen(func_value, min_func_value) && Fraction.moreThen(x_dot, Fraction.toFraction((long) -1)) &&
+                            Fraction.moreThen(y_dot, Fraction.toFraction((long) -1))) {
                         min_func_value = func_value;
                         x = x_dot;
                         y = y_dot;

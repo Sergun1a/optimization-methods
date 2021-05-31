@@ -16,7 +16,7 @@ public class Fraction {
         }
         if (fraction.getDivider() == 0) {
             fraction.setDivider((long) 1);
-            fraction.setDividend((long) 0);
+            fraction.setDividend((long) 1);
         }
 
         return fraction;
