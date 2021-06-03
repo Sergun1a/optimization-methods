@@ -26,6 +26,10 @@ public class SimplexMethod {
         };
     }
 
+    public Fraction[][] getSystem() {
+        return system;
+    }
+
     public static Fraction[][] cloneFractionArray(Fraction[][] array) {
         Fraction[][] newArray = new Fraction[array.length][array[0].length];
         for (int i = 0; i < array.length; i++) {
@@ -91,6 +95,30 @@ public class SimplexMethod {
      */
     protected Fraction[] basis;
 
+    protected int supporting_elem_col = -2;
+    protected int supporting_elem_row = -2;
+
+    /**
+     * Устанавливаю пользовательский опорный элемент
+     *
+     * @param col - выбранный столбец
+     * @param row - выбранная строка
+     * @throws InvalidTypeException
+     */
+    public void setUserSupportingElem(int col, int row) throws InvalidTypeException {
+        if (checkPickedUpElement(row, col)) {
+            supporting_elem_col = col;
+            supporting_elem_row = row;
+        }
+    }
+
+    /**
+     * Удаляю пользовательский опорный элемент
+     */
+    public void deleteUserSupportingElem() {
+        supporting_elem_col = -2;
+        supporting_elem_row = -2;
+    }
 
     /**
      * Установка пользовательского базиса
@@ -157,6 +185,53 @@ public class SimplexMethod {
             }
         }
         return new int[]{-1, column};
+    }
+
+
+    /**
+     * Просто выбираю опорный элемент без перестановок переменных
+     *
+     * @return выбранный опорный элемент
+     * @throws InvalidTypeException
+     */
+    public int[] idlePickupElement() throws InvalidTypeException {
+        int rows = system.length;
+        int columns = system[0].length;
+        int column = -1;
+
+        // подбираю подходящие столбцы
+        for (int i = 0; i < columns - 1; i++) {
+            if (Fraction.lowerThen(system[rows - 1][i], (long) 0)) {
+                column = i;
+                if (chooseRow(i) != -1) {
+                    return new int[]{chooseRow(i), i};
+                }
+            }
+        }
+        return new int[]{-1, column};
+    }
+
+    /**
+     * Проверяю что выбранный элемент может быть опорным
+     *
+     * @return true или false
+     * @throws InvalidTypeException
+     */
+    public boolean checkPickedUpElement(int row, int col) throws InvalidTypeException {
+        int rows = system.length;
+
+        // если столбец отрицательный
+        if (Fraction.lowerThen(system[rows - 1][col], (long) 0)) {
+            // для него существует положительный элемент
+            if (chooseRow(col) != -1) {
+                // и значение совпадает полученного мной и пользовательского совпадает
+                Fraction choosed = Fraction.divisionFractions(system[chooseRow(col)][system[chooseRow(col)].length - 1], system[chooseRow(col)][col]);
+                Fraction user = Fraction.divisionFractions(system[row][system[row].length - 1], system[row][col]);
+                if (Fraction.equal(choosed, user))
+                    return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -337,7 +412,7 @@ public class SimplexMethod {
      * @param value - значение. Если нужно найти первую основную переменную нужно передать 1, если первую зависимую переменную, то нужно передать -1 и т.д.
      * @return номер переменной, -1 если не нашел
      */
-    protected int findVar(int value) {
+    public int findVar(int value) {
         for (int i = 0; i < masterSlave.length; i++) {
             if (masterSlave[i] == value) {
                 return i;

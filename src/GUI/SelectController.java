@@ -45,7 +45,7 @@ public class SelectController {
                 try {
                     Holder.var_number = (int) var_number.getValue();
                     Holder.sys_number = (int) sys_number.getValue();
-                    ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, 800, 650);
+                    ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
                 } catch (IOException e) {
                     e.printStackTrace();
                     error_field.setText("Некорректные значения");

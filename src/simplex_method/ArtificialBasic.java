@@ -10,6 +10,7 @@ import helpers.MathMiddleware;
 public class ArtificialBasic extends SimplexMethod {
     /**
      * Название аргументов нужных для работы метода. Нужно для сохранения и открытия файла
+     *
      * @return массив аргументов
      */
     public static String[] fileArguments() {
@@ -147,19 +148,30 @@ public class ArtificialBasic extends SimplexMethod {
     }
 
     @Override
-    public void solution() throws InvalidTypeException {
+    public void initiate() throws InvalidTypeException {
         // устанавливаю стартовую информацию о зависимых и основных переменных
         setABMasterSlave();
         // привожу систему к стартовой таблице искуственного базиса
         toArtificialBasisTable();
+    }
+
+    @Override
+    public int[] makeStep() throws InvalidTypeException {
+        int[] element = super.makeStep();
+        if (element[0] != -1) {
+            system = MathMiddleware.deleteCol(system, element[1]);
+            deleteVariable(-(element[1] + 1));
+        }
+        return element;
+    }
+
+    @Override
+    public void solution() throws InvalidTypeException {
+        initiate();
         // считаю таблицу искусственного базиса
         int[] element = new int[]{0, 0};
         while (!emptyABLastRow() && element[0] != -1) {
             element = makeStep();
-            if (element[0] != -1) {
-                system = MathMiddleware.deleteCol(system, element[1]);
-                deleteVariable(-(element[1] + 1));
-            }
         }
         if ((element[0] == -1 && element[1] != -1) || !emptyABLastRow()) {
             System.out.println("Искусственный базис не имеет решения");

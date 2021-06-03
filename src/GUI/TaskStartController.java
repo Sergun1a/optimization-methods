@@ -155,12 +155,24 @@ public class TaskStartController {
         step_solve.setOnAction((ActionEvent event) -> {
             if (validate()) {
                 if (Holder.current_task.equals("Симплекс метод")) {
+                    serializeToSimplex();
                     SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                     try {
                         simplex.initiate();
-                        simplex.makeStep();
-                        Holder.taskClass = simplex;
-                    } catch (InvalidTypeException e) {
+                        Holder.updateTask(simplex);
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                    } catch (IOException | InvalidTypeException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (Holder.current_task.equals("Искусственный базис")) {
+                    serializeToAB();
+                    ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
+                    try {
+                        ab.initiate();
+                        Holder.updateTask(ab);
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                    } catch (InvalidTypeException | IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -188,7 +200,7 @@ public class TaskStartController {
         }
         Holder.var_number = var_number;
         Holder.sys_number = sys_number;
-        ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, 800, 650);
+        ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
     }
 
     /**
@@ -245,7 +257,7 @@ public class TaskStartController {
      * @param value
      * @return Object
      */
-    private Object fieldValueType(String value) {
+    public static Object fieldValueType(String value) {
         // дробь
         if (value.contains("/")) {
             return value;
