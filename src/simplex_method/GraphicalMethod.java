@@ -281,8 +281,8 @@ public class GraphicalMethod extends SimplexMethod {
     /**
      * Вывод решения графического метода
      */
-    @Override
-    public void printSolution() throws InvalidTypeException {
+    /*@Override
+    public String printSolution() throws InvalidTypeException {
         for (int i = 0; i < originalSize - 1; i++) {
             if (masterSlave[i] <= 0) {
                 System.out.println("x" + (i + 1) + " = " + 0);
@@ -291,5 +291,5 @@ public class GraphicalMethod extends SimplexMethod {
             }
         }
         System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
-    }
+    }*/
 }

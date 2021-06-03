@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import sample.ApplicationMenu;
+import simplex_method.ArtificialBasic;
 import simplex_method.SimplexMethod;
 
 import java.io.IOException;
@@ -21,6 +22,9 @@ import java.util.HashMap;
  * Окно с вводом стартовой задачи
  */
 public class TaskStartController {
+    private Fraction[] function;
+    private Fraction[][] system;
+
     @FXML
     private GridPane gridPane;
 
@@ -75,6 +79,7 @@ public class TaskStartController {
 
         // Если решаю симплекс метод нужно задать базис
         if (Holder.current_task.equals("Симплекс метод")) {
+            gridPane.add(new Text("Базис"), 0, 22);
             // делаю текстовые поля для базиса и подписи
             for (int i = 0; i < Holder.var_number - 1; i++) {
                 gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.basisLabelRow);
@@ -101,7 +106,6 @@ public class TaskStartController {
         });
 
         fileSave.setOnAction((ActionEvent event) -> {
-            /*TODO Здесь нужно получить значения полей которые будут записаны в файл и передать в функцию*/
             String content = "";
             content += FileWorker.attributeToString("type", Holder.current_task);
             content += FileWorker.attributeToString("var_number", Integer.toString(Holder.var_number));
@@ -116,7 +120,7 @@ public class TaskStartController {
             }
 
             if (Holder.current_task.equals("Симплекс метод")) {
-                for (int i = 0; i < Holder.var_number-1; i++) {
+                for (int i = 0; i < Holder.var_number - 1; i++) {
                     content += FileWorker.attributeToString("b" + i, ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText());
                 }
             }
@@ -126,11 +130,21 @@ public class TaskStartController {
         quick_solve.setOnAction((ActionEvent event) -> {
             // если все введенные пользователем данные корректны, создаю класс задачи
             if (validate()) {
-                serializeToSimplex();
                 if (Holder.current_task.equals("Симплекс метод")) {
+                    serializeToSimplex();
                     SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                     try {
                         simplex.solution();
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                    } catch (InvalidTypeException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (Holder.current_task.equals("Искусственный базис")) {
+                    serializeToAB();
+                    ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
+                    try {
+                        ab.solution();
                     } catch (InvalidTypeException e) {
                         e.printStackTrace();
                     }
@@ -252,11 +266,8 @@ public class TaskStartController {
         return null;
     }
 
-    /**
-     * Приобразую введенные данные пользователем в стартовый симплекс метод
-     */
-    private void serializeToSimplex() {
-        Fraction[] function = new Fraction[Holder.var_number];
+    private void serializeBasicData() {
+        function = new Fraction[Holder.var_number];
         // задаю данные для функции
         for (int i = 0; i < Holder.var_number - 1; i++) {
             try {
@@ -272,7 +283,7 @@ public class TaskStartController {
             function[0] = new Fraction((long) 0, (long) 1);
         }
 
-        Fraction[][] system = new Fraction[Holder.sys_number][Holder.var_number];
+        system = new Fraction[Holder.sys_number][Holder.var_number];
         // задаю систему
         for (int j = ApplicationMenu.systemInputRow; j < Holder.sys_number + ApplicationMenu.systemInputRow; j++) {
             for (int i = 0; i < Holder.var_number; i++) {
@@ -283,6 +294,13 @@ public class TaskStartController {
                 }
             }
         }
+    }
+
+    /**
+     * Приобразую введенные данные пользователем в стартовый симплекс метод
+     */
+    private void serializeToSimplex() {
+        serializeBasicData();
         Fraction[] basis = new Fraction[Holder.var_number - 1];
         // задаю базис
         for (int i = 0; i < Holder.var_number - 1; i++) {
@@ -307,12 +325,20 @@ public class TaskStartController {
 
     /**
      * Приобразую введенные данные пользователем в стартовый метод искусственного базиса
-     *
-     * @return - класс метода искусственного базиса с пользовательскими данными
      */
-    /*private ArtificialBasic serializeToAB() {
-
-    }*/
+    private void serializeToAB() {
+        serializeBasicData();
+        try {
+            ArtificialBasic ab = new ArtificialBasic(
+                    "min",
+                    function,
+                    system
+            );
+            Holder.taskClass = ab;
+        } catch (InvalidTypeException ex) {
+            ApplicationMenu.showAlert("error", "Не могу создать метод искусственного базиса", "Ошибка искусственного базиса", "Не могу создать класс искусственного базиса");
+        }
+    }
 
     /**
      * Приобразую введенные данные пользователем в стартовый графический метод

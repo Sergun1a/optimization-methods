@@ -88,10 +88,5 @@
       </Text>
       <Button fx:id="step_solve" mnemonicParsing="false" onAction="#runMethod" prefHeight="25.0" prefWidth="123.0" text="По шагам" GridPane.columnIndex="10" GridPane.rowIndex="25" />
       <Button fx:id="quick_solve" mnemonicParsing="false" onAction="#runMethod" prefHeight="25.0" prefWidth="207.0" text="Быстрое решение" GridPane.columnIndex="12" GridPane.rowIndex="25" />
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Базис" textAlignment="CENTER" wrappingWidth="194.8033504486084" GridPane.rowIndex="22">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Text>
    </children>
 </GridPane>

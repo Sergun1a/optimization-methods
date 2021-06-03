@@ -188,7 +188,7 @@ public class Main extends Application {
                     }
 
             );*/
-       GraphicalMethod abasis = new GraphicalMethod(
+        /*GraphicalMethod abasis = new GraphicalMethod(
                 "min",
                 new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -2), Fraction.toFraction((long) -1), Fraction.toFraction((long) -3), Fraction.toFraction((long) -1)},
                 new Fraction[][]{
@@ -196,6 +196,24 @@ public class Main extends Application {
                         {Fraction.toFraction((long) 1), Fraction.toFraction((long) -1), Fraction.toFraction((long) -1), Fraction.toFraction((long) 2), Fraction.toFraction((long) 1)},
                 },
                 new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) 1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 0)}
+        );*/
+        /*GraphicalMethod abasis = new GraphicalMethod(
+                "min",
+                new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -1), Fraction.toFraction((long) -2), Fraction.toFraction((long) 1), Fraction.toFraction((long) -1)},
+                new Fraction[][]{
+                        {Fraction.toFraction((long) 1), Fraction.toFraction((long) 1), Fraction.toFraction((long) -2), Fraction.toFraction((long) 3), Fraction.toFraction((long) 1)},
+                        {Fraction.toFraction((long) 2), Fraction.toFraction((long) -2), Fraction.toFraction((long) -1), Fraction.toFraction((long) 3), Fraction.toFraction((long) 2)},
+                },
+                new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) 1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 0)}
+        );*/
+        GraphicalMethod abasis = new GraphicalMethod(
+                "min",
+                new Fraction[]{Fraction.toFraction((long) 0), Fraction.toFraction((long) -1), Fraction.toFraction((long) -4), Fraction.toFraction((long) -1)},
+                new Fraction[][]{
+                        {Fraction.toFraction((long) 1), Fraction.toFraction((long) -1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 3)},
+                        {Fraction.toFraction((long) 2), Fraction.toFraction((long) -5), Fraction.toFraction((long) -1), Fraction.toFraction((long) 0)},
+                },
+                new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 0)}
         );
         /*GraphicalMethod abasis = new GraphicalMethod(
                 "min",
@@ -207,7 +225,7 @@ public class Main extends Application {
                 },
                 new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 1)}
         );*/
-        abasis.solution();
+        //abasis.solution();
         /*} catch (InvalidTypeException ex) {
             System.out.println(ex.getMessage());
         }*/

@@ -50,6 +50,18 @@ public class Holder {
      */
     public static HashMap<String, String> fileData;
 
+    /**
+     * Fxml файл для вывода решения
+     */
+    public static String solutionFile() {
+        if (current_task.equals("Симплекс метод")) {
+            return "solution_output.fxml";
+        }
+        if (current_task.equals("Искусственный базис")) {
+            return "solution_output.fxml";
+        }
+        return "";
+    }
 
     public static String startedTaskFile() {
         /*if (current_task.equals("Симплекс метод")) {

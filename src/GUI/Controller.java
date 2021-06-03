@@ -39,8 +39,17 @@ public class Controller {
         simplex_start.setOnAction((ActionEvent event) -> {
             // вывожу окно с выбором количества переменных и количества уравнений в системе
             try {
-                ApplicationMenu.showScene(Holder.primaryStage,"select.fxml", "Выбор", 300, 300);
+                ApplicationMenu.showScene(Holder.primaryStage, "select.fxml", "Выбор", 300, 300);
                 Holder.current_task = "Симплекс метод";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        basis_start.setOnAction((ActionEvent event) -> {
+            // вывожу окно с выбором количества переменных и количества уравнений в системе
+            try {
+                ApplicationMenu.showScene(Holder.primaryStage, "select.fxml", "Выбор", 300, 300);
+                Holder.current_task = "Искусственный базис";
             } catch (IOException e) {
                 e.printStackTrace();
             }

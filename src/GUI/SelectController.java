@@ -48,6 +48,7 @@ public class SelectController {
                     ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, 800, 650);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    error_field.setText("Некорректные значения");
                 }
             } else {
                 error_field.setText("Не выбраны значения");

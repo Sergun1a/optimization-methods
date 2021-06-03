@@ -349,14 +349,20 @@ public class SimplexMethod {
     /**
      * Вывод решения симплекс метода
      */
-    public void printSolution() throws InvalidTypeException {
+    public String printSolution() throws InvalidTypeException {
+        StringBuilder res = new StringBuilder();
         for (int i = 0; i < system.length - 1; i++) {
+            res.append("x").append(findVar(i + 1) + 1).append(" = ").append(system[i][system[i].length - 1]).append("\n");
             System.out.println("x" + (findVar(i + 1) + 1) + " = " + system[i][system[i].length - 1]);
         }
         for (int i = 0; i < system[0].length - 1; i++) {
+            res.append("x").append(findVar(-(i + 1)) + 1).append(" = ").append(0).append("\n");
             System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
         }
+        res.append("f = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
         System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
+        System.out.println("res = " + res.toString());
+        return res.toString();
     }
 
     /**
