@@ -359,9 +359,8 @@ public class SimplexMethod {
             res.append("x").append(findVar(-(i + 1)) + 1).append(" = ").append(0).append("\n");
             System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
         }
-        res.append("f = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
+        res.append("\nf = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
         System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
-        System.out.println("res = " + res.toString());
         return res.toString();
     }
 

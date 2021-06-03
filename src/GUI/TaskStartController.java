@@ -145,7 +145,8 @@ public class TaskStartController {
                     ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
                     try {
                         ab.solution();
-                    } catch (InvalidTypeException e) {
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                    } catch (InvalidTypeException | IOException e) {
                         e.printStackTrace();
                     }
                 }

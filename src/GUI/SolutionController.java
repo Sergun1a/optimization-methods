@@ -13,16 +13,14 @@ public class SolutionController {
     private GridPane gridPane;
 
     @FXML
-    private void initiate() throws InvalidTypeException {
-
+    private void initialize() throws InvalidTypeException {
         if (Holder.current_task.equals("Симплекс метод")) {
             SimplexMethod task = (SimplexMethod) (Holder.taskClass);
-            gridPane.add(new Text((task.printSolution())), 0, 2);
+            gridPane.add(new Text(task.printSolution()), 0, 1);
         }
         if (Holder.current_task.equals("Искусственный базис")) {
             ArtificialBasic task = (ArtificialBasic) (Holder.taskClass);
-            gridPane.add(new Text((task.printSolution())), 0, 2);
+            gridPane.add(new Text((task.printSolution())), 0, 1);
         }
-
     }
 }
