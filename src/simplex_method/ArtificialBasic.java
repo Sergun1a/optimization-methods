@@ -8,6 +8,9 @@ import helpers.MathMiddleware;
  * Класс хранящий условия симплекс метода с искусственным базисом и методы его решающие
  */
 public class ArtificialBasic extends SimplexMethod {
+
+    private boolean isSimplexStage = false;
+
     /**
      * Название аргументов нужных для работы метода. Нужно для сохранения и открытия файла
      *
@@ -153,6 +156,7 @@ public class ArtificialBasic extends SimplexMethod {
         setABMasterSlave();
         // привожу систему к стартовой таблице искуственного базиса
         toArtificialBasisTable();
+        status = "initiated";
     }
 
     @Override
@@ -162,7 +166,23 @@ public class ArtificialBasic extends SimplexMethod {
             system = MathMiddleware.deleteCol(system, element[1]);
             deleteVariable(-(element[1] + 1));
         }
+        if (status.equals("solved") && !isSimplexStage) {
+            status = "ab_solved";
+            isSimplexStage = true;
+        }
         return element;
+    }
+
+    /**
+     * Привожу решенный искуственный базис к начальной симплекс таблице
+     *
+     * @throws InvalidTypeException
+     */
+    public void toSimplex() throws InvalidTypeException {
+        // обновляю функцию согласно решению AB
+        updateFunction();
+        // привожу матрицу искусственного базиса к стартовой таблице симплекс метода
+        fromArtificalToSimplex();
     }
 
     @Override
@@ -177,10 +197,6 @@ public class ArtificialBasic extends SimplexMethod {
             System.out.println("Искусственный базис не имеет решения");
             return;
         }
-        // обновляю функцию согласно решению AB
-        updateFunction();
-        // привожу матрицу искусственного базиса к стартовой таблице симплекс метода
-        fromArtificalToSimplex();
         // решаю симплекс таблицу
         quickSolve();
     }

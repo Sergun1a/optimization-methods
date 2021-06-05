@@ -89,7 +89,10 @@ public class TaskStepController {
                             task.setUserSupportingElem(Integer.parseInt(basis_col.getText()) - 1, Integer.parseInt(basis_row.getText()) - 1);
                             task.makeStep();
                             Holder.updateTask(task);
-                            ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                            if (((SimplexMethod) Holder.taskClass).status.equals("solved")) {
+                                ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                            } else
+                                ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
                         } else {
                             ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в системе",
                                     "Выбранный элемент не может быть опорным");
@@ -103,6 +106,30 @@ public class TaskStepController {
             }
             if (Holder.current_task.equals("Искусственный базис")) {
                 ArtificialBasic task = (ArtificialBasic) Holder.taskClass;
+                if (validate()) {
+                    try {
+                        if (task.checkPickedUpElement(Integer.parseInt(basis_row.getText()) - 1, Integer.parseInt(basis_col.getText()) - 1)) {
+                            task.setUserSupportingElem(Integer.parseInt(basis_col.getText()) - 1, Integer.parseInt(basis_row.getText()) - 1);
+                            task.makeStep();
+                            Holder.updateTask(task);
+                            if (((ArtificialBasic) Holder.taskClass).status.equals("ab_solved")) {
+                                task.toSimplex();
+                                Holder.current_task = "Симплекс метод";
+                            }
+                            if (((ArtificialBasic) Holder.taskClass).status.equals("solved")) {
+                                ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                            } else
+                                ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                        } else {
+                            ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в системе",
+                                    "Выбранный элемент не может быть опорным");
+                        }
+                    } catch (InvalidTypeException | IOException e) {
+                        e.printStackTrace();
+                        ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в системе",
+                                "Некорректный данные для выбора опорного элемента");
+                    }
+                }
             }
 
         });

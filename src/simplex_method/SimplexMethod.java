@@ -10,6 +10,8 @@ import java.util.LinkedList;
  * Класс хранящий условия симплекс метода и методы его решающие
  */
 public class SimplexMethod {
+    public String status = "new";
+
     /**
      * Название аргументов нужных для работы метода. Нужно для сохранения и открытия файла
      *
@@ -145,7 +147,7 @@ public class SimplexMethod {
         int rows = system.length;
         Fraction min = new Fraction(Long.MAX_VALUE, 1);
         for (int i = 0; i < rows - 1; i++) {
-            if (Fraction.moreThen(system[i][column], (long) 0)) {
+            if (Fraction.moreThen(system[i][column], (long) 0) && Fraction.moreThen(system[i][system[0].length - 1], (long) -1)) {
                 Fraction currentMin = Fraction.divisionFractions(system[i][system[0].length - 1], system[i][column]);
                 if (Fraction.lowerThen(currentMin, min)) {
                     min = currentMin;
@@ -402,6 +404,13 @@ public class SimplexMethod {
             calculateNewSystem(element[0], element[1]);
             previous_steps.add(this);
         }
+        // если подобранный системой следующий опорный элемент не задан значит нашли решение
+        int[] nextElem = idlePickupElement();
+        if (nextElem[0] == -1 && nextElem[1] == -1) {
+            status = "solved";
+        } else if (nextElem[0] == -1 && nextElem[1] != -1) {
+            status = "solved";
+        }
         return element;
     }
 
@@ -426,16 +435,22 @@ public class SimplexMethod {
      */
     public String printSolution() throws InvalidTypeException {
         StringBuilder res = new StringBuilder();
-        for (int i = 0; i < system.length - 1; i++) {
-            res.append("x").append(findVar(i + 1) + 1).append(" = ").append(system[i][system[i].length - 1]).append("\n");
-            System.out.println("x" + (findVar(i + 1) + 1) + " = " + system[i][system[i].length - 1]);
+        int[] nextElem = idlePickupElement();
+        if (nextElem[0] == -1 && nextElem[1] == -1) {
+            res.append("Система решена\n");
+            for (int i = 0; i < system.length - 1; i++) {
+                res.append("x").append(findVar(i + 1) + 1).append(" = ").append(system[i][system[i].length - 1]).append("\n");
+                System.out.println("x" + (findVar(i + 1) + 1) + " = " + system[i][system[i].length - 1]);
+            }
+            for (int i = 0; i < system[0].length - 1; i++) {
+                res.append("x").append(findVar(-(i + 1)) + 1).append(" = ").append(0).append("\n");
+                System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
+            }
+            res.append("\nf = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
+            System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
+        } else if (nextElem[0] == -1 && nextElem[1] != -1) {
+            res.append("Система не имеет решений\n");
         }
-        for (int i = 0; i < system[0].length - 1; i++) {
-            res.append("x").append(findVar(-(i + 1)) + 1).append(" = ").append(0).append("\n");
-            System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
-        }
-        res.append("\nf = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
-        System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
         return res.toString();
     }
 
@@ -453,10 +468,10 @@ public class SimplexMethod {
         if (element[0] == -1 && element[1] == -1) {
             System.out.println("Система решена");
             printSolution();
-
         } else if (element[0] == -1 && element[1] != -1) {
             System.out.println("Система не имеет решения");
         }
+        status = "solved";
         return element;
     }
 
@@ -471,6 +486,7 @@ public class SimplexMethod {
         updateFunction();
         // приводу матрицу гаусса к стартовой симплекс таблице
         gausToSimplex();
+        status = "initiated";
     }
 
     public void solution() throws InvalidTypeException {
