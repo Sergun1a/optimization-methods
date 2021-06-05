@@ -331,6 +331,7 @@ public class TaskStartController {
                     basis
             );
             Holder.taskClass = simplex;
+            Holder.task_solution_steps.add(new SimplexMethod("min", function, system, basis));
         } catch (InvalidTypeException ex) {
             ApplicationMenu.showAlert("error", "Не могу создать симплекс метод", "Ошибка симплекса", "Не могу создать класс симплекс метода");
         }
@@ -348,6 +349,7 @@ public class TaskStartController {
                     system
             );
             Holder.taskClass = ab;
+            Holder.task_solution_steps.add(new ArtificialBasic("min", function, system));
         } catch (InvalidTypeException ex) {
             ApplicationMenu.showAlert("error", "Не могу создать метод искусственного базиса", "Ошибка искусственного базиса", "Не могу создать класс искусственного базиса");
         }

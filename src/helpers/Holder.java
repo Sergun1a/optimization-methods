@@ -6,6 +6,7 @@ import simplex_method.SimplexMethod;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Класс для хранения переменных, которые должны быть доступны в нескольких местах
@@ -15,8 +16,8 @@ public class Holder {
     /**
      * Размеры экрана пользователя
      */
-    public static int screenWidth = (int) screenSize.getWidth();
-    public static int screenHeight = (int) screenSize.getHeight();
+    public static int screenWidth = (int) (screenSize.getWidth() * 0.95);
+    public static int screenHeight = (int) (screenSize.getHeight() * 0.9);
     /**
      * Основная сцена
      */
@@ -55,6 +56,12 @@ public class Holder {
      * Данные из открытого файла
      */
     public static HashMap<String, String> fileData;
+
+
+    /**
+     * Хряню шаги решения задачи
+     */
+    public static LinkedList<Object> task_solution_steps = new LinkedList<Object>();
 
     /**
      * Fxml файл для вывода решения

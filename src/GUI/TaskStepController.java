@@ -133,6 +133,30 @@ public class TaskStepController {
             }
 
         });
+        step_back.setOnAction((ActionEvent event) -> {
+            Object prev_task;
+            if (Holder.current_task.equals("Симплекс метод")) {
+                SimplexMethod task = (SimplexMethod) Holder.taskClass;
+                // если нет предыдущего значит нужно грузить task_start
+                if (!Holder.task_solution_steps.listIterator(Holder.task_solution_steps.size() - 1).hasPrevious()) {
+                    return;
+                }
+                prev_task = Holder.task_solution_steps.listIterator(Holder.task_solution_steps.size() - 1).previous();
+                if (!task.status.equals("new")) {
+                    Holder.updateTask(prev_task);
+                    try {
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        ApplicationMenu.showAlert("error", "Ошибка", "Неизвестная ошибка в системе", "");
+                    }
+                }
+            }
+            if (Holder.current_task.equals("Искусственный базис")) {
+                ArtificialBasic task = (ArtificialBasic) Holder.taskClass;
+                prev_task = Holder.task_solution_steps.listIterator(Holder.task_solution_steps.size() - 1).previous();
+            }
+        });
     }
 
 

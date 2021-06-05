@@ -2,6 +2,7 @@ package simplex_method;
 
 import com.sun.jdi.InvalidTypeException;
 import helpers.Fraction;
+import helpers.Holder;
 import helpers.MathMiddleware;
 
 import java.util.LinkedList;
@@ -55,11 +56,7 @@ public class SimplexMethod {
         function = u_function;
         system = u_system;
         basis = u_basis;
-        if (previous_steps == null) {
-            previous_steps = new LinkedList<SimplexMethod>();
-        }
         masterSlave = new int[function.length - 1];
-        previous_steps.add(this);
         //previous_steps.listIterator(previous_steps.size()-1).previous();
     }
 
@@ -402,7 +399,7 @@ public class SimplexMethod {
         int[] element = pickupElement();
         if (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
-            previous_steps.add(this);
+            Holder.task_solution_steps.add(new SimplexMethod(this.type, this.function, this.system, this.basis));
         }
         // если подобранный системой следующий опорный элемент не задан значит нашли решение
         int[] nextElem = idlePickupElement();
