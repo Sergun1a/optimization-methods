@@ -33,6 +33,19 @@ public class SimplexMethod {
         return system;
     }
 
+    public Fraction[] getFunction() {
+        return function;
+    }
+
+    public Fraction[] getBasis() {
+        return basis;
+    }
+
+    public int[] getMasterSlave() {
+        return masterSlave;
+    }
+
+
     public static Fraction[][] cloneFractionArray(Fraction[][] array) {
         Fraction[][] newArray = new Fraction[array.length][array[0].length];
         for (int i = 0; i < array.length; i++) {
@@ -57,8 +70,18 @@ public class SimplexMethod {
         system = u_system;
         basis = u_basis;
         masterSlave = new int[function.length - 1];
-        //previous_steps.listIterator(previous_steps.size()-1).previous();
     }
+
+
+    public SimplexMethod(String u_type, Fraction[] u_function, Fraction[][] u_system, Fraction[] u_basis, int[] u_masterSlave, String u_status) throws InvalidTypeException {
+        type = u_type;
+        function = u_function;
+        system = u_system;
+        basis = u_basis;
+        masterSlave = u_masterSlave;
+        status = u_status;
+    }
+
 
     /**
      * Переменная для хранения предыдущих шагов решения
@@ -167,6 +190,8 @@ public class SimplexMethod {
         int temp;
         int slave, master;
         int column = -1;
+
+        /*@TODO Сделать подмену элемента на пользовательский, если пользовательский опорный элемент задан*/
 
         // подбираю подходящие столбцы
         for (int i = 0; i < columns - 1; i++) {
@@ -399,7 +424,7 @@ public class SimplexMethod {
         int[] element = pickupElement();
         if (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
-            Holder.task_solution_steps.add(new SimplexMethod(this.type, this.function, this.system, this.basis));
+            Holder.addStep(new SimplexMethod(this.type, this.function, this.system, this.basis, this.masterSlave, this.status));
         }
         // если подобранный системой следующий опорный элемент не задан значит нашли решение
         int[] nextElem = idlePickupElement();
@@ -484,6 +509,7 @@ public class SimplexMethod {
         // приводу матрицу гаусса к стартовой симплекс таблице
         gausToSimplex();
         status = "initiated";
+        Holder.addStep(new SimplexMethod(this.type, this.function, this.system, this.basis, this.masterSlave, this.status));
     }
 
     public void solution() throws InvalidTypeException {

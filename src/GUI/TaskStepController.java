@@ -1,7 +1,6 @@
 package GUI;
 
 import com.sun.jdi.InvalidTypeException;
-import helpers.Fraction;
 import helpers.Holder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,8 +13,6 @@ import simplex_method.ArtificialBasic;
 import simplex_method.SimplexMethod;
 
 import java.io.IOException;
-
-import static GUI.TaskStartController.fieldValueType;
 
 
 public class TaskStepController {
@@ -138,15 +135,16 @@ public class TaskStepController {
             if (Holder.current_task.equals("Симплекс метод")) {
                 SimplexMethod task = (SimplexMethod) Holder.taskClass;
                 // если нет предыдущего значит нужно грузить task_start
-                if (!Holder.task_solution_steps.listIterator(Holder.task_solution_steps.size() - 1).hasPrevious()) {
+                if (Holder.task_solution_steps.size() <= 1) {
                     return;
                 }
-                prev_task = Holder.task_solution_steps.listIterator(Holder.task_solution_steps.size() - 1).previous();
+                prev_task = Holder.getPreviousStep();
                 if (!task.status.equals("new")) {
-                    Holder.updateTask(prev_task);
+                    SimplexMethod simplexMethod = (SimplexMethod) prev_task;
                     try {
+                        Holder.updateTask(new SimplexMethod("min", simplexMethod.getFunction(), simplexMethod.getSystem(), simplexMethod.getBasis(), simplexMethod.getMasterSlave(), simplexMethod.status));
                         ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
-                    } catch (IOException e) {
+                    } catch (IOException | InvalidTypeException e) {
                         e.printStackTrace();
                         ApplicationMenu.showAlert("error", "Ошибка", "Неизвестная ошибка в системе", "");
                     }

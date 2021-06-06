@@ -2,6 +2,7 @@ package simplex_method;
 
 import com.sun.jdi.InvalidTypeException;
 import helpers.Fraction;
+import helpers.Holder;
 import helpers.MathMiddleware;
 
 /**
@@ -28,6 +29,11 @@ public class ArtificialBasic extends SimplexMethod {
 
     public ArtificialBasic(String u_type, Fraction[] u_function, Fraction[][] u_system) throws InvalidTypeException {
         super(u_type, u_function, u_system, new Fraction[u_system[0].length + u_system.length]);
+    }
+
+    public ArtificialBasic(String u_type, Fraction[] u_function, Fraction[][] u_system, String u_status) throws InvalidTypeException {
+        super(u_type, u_function, u_system, new Fraction[u_system[0].length + u_system.length]);
+        status = u_status;
     }
 
     /**
@@ -157,6 +163,7 @@ public class ArtificialBasic extends SimplexMethod {
         // привожу систему к стартовой таблице искуственного базиса
         toArtificialBasisTable();
         status = "initiated";
+        Holder.task_solution_steps.add(new ArtificialBasic(this.type, this.function, this.system, this.status));
     }
 
     @Override
