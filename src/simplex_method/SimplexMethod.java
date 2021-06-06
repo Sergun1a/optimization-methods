@@ -82,12 +82,6 @@ public class SimplexMethod {
         status = u_status;
     }
 
-
-    /**
-     * Переменная для хранения предыдущих шагов решения
-     */
-    public static LinkedList<SimplexMethod> previous_steps;
-
     public static final String MAX = "max";
     public static final String MIN = "min";
 
@@ -191,7 +185,17 @@ public class SimplexMethod {
         int slave, master;
         int column = -1;
 
-        /*@TODO Сделать подмену элемента на пользовательский, если пользовательский опорный элемент задан*/
+        // подмена элемента на пользовательский, если пользовательский опорный элемент задан
+        if (supporting_elem_row != -2 && supporting_elem_col != -2) {
+            master = findVar(supporting_elem_row + 1);
+            slave = findVar(-(supporting_elem_col + 1));
+            temp = masterSlave[master];
+            masterSlave[master] = masterSlave[slave];
+            masterSlave[slave] = temp;
+            int[] result = new int[]{supporting_elem_row, supporting_elem_col};
+            deleteUserSupportingElem();
+            return result;
+        }
 
         // подбираю подходящие столбцы
         for (int i = 0; i < columns - 1; i++) {
