@@ -134,12 +134,18 @@ public class TaskStepController {
             Object prev_task;
             if (Holder.current_task.equals("Симплекс метод")) {
                 SimplexMethod task = (SimplexMethod) Holder.taskClass;
-                // если нет предыдущего значит нужно грузить task_start
-                if (Holder.task_solution_steps.size() <= 1) {
-                    return;
-                }
                 prev_task = Holder.getPreviousStep();
-                if (!task.status.equals("new")) {
+                if (((SimplexMethod) prev_task).status.equals("new")) {
+                    try {
+                        SimplexMethod simplexMethod = (SimplexMethod) prev_task;
+                        Holder.updateTask(new SimplexMethod("min", simplexMethod.getFunction(), simplexMethod.getSystem(), simplexMethod.getBasis(), simplexMethod.getMasterSlave(), simplexMethod.status));
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                    } catch (InvalidTypeException | IOException e) {
+                        e.printStackTrace();
+                        ApplicationMenu.showAlert("error", "Ошибка", "Неизвестная ошибка в системе", "");
+                    }
+                }
+                if (!((SimplexMethod) prev_task).status.equals("new")) {
                     SimplexMethod simplexMethod = (SimplexMethod) prev_task;
                     try {
                         Holder.updateTask(new SimplexMethod("min", simplexMethod.getFunction(), simplexMethod.getSystem(), simplexMethod.getBasis(), simplexMethod.getMasterSlave(), simplexMethod.status));
@@ -152,7 +158,27 @@ public class TaskStepController {
             }
             if (Holder.current_task.equals("Искусственный базис")) {
                 ArtificialBasic task = (ArtificialBasic) Holder.taskClass;
-                prev_task = Holder.task_solution_steps.listIterator(Holder.task_solution_steps.size() - 1).previous();
+                prev_task = Holder.getPreviousStep();
+                if (((ArtificialBasic) prev_task).status.equals("new")) {
+                    try {
+                        ArtificialBasic ab = (ArtificialBasic) prev_task;
+                        Holder.updateTask(new ArtificialBasic("min", ab.getFunction(), ab.getSystem(), ab.getMasterSlave(), ab.status));
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.startedTaskFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                    } catch (InvalidTypeException | IOException e) {
+                        e.printStackTrace();
+                        ApplicationMenu.showAlert("error", "Ошибка", "Неизвестная ошибка в системе", "");
+                    }
+                }
+                if (!((SimplexMethod) prev_task).status.equals("new")) {
+                    ArtificialBasic ab = (ArtificialBasic) prev_task;
+                    try {
+                        Holder.updateTask(new ArtificialBasic("min", ab.getFunction(), ab.getSystem(), ab.getMasterSlave(), ab.status));
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                    } catch (IOException | InvalidTypeException e) {
+                        e.printStackTrace();
+                        ApplicationMenu.showAlert("error", "Ошибка", "Неизвестная ошибка в системе", "");
+                    }
+                }
             }
         });
     }

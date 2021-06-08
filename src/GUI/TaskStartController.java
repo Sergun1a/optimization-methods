@@ -43,6 +43,18 @@ public class TaskStartController {
 
     private String cellValue(String type, int i) {
         if (Holder.fileData == null) {
+            if (Holder.taskClass != null) {
+                if (type.equals("f")) {
+                    int lenght = ((SimplexMethod) Holder.taskClass).getFunction().length-1;
+                    if (i == lenght) {
+                        return ((SimplexMethod) Holder.taskClass).getFunction()[0].toString();
+                    }
+                    return ((SimplexMethod) Holder.taskClass).getFunction()[i+1].toString();
+                }
+                if (type.equals("b") && (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод"))) {
+                    return ((SimplexMethod) Holder.taskClass).getBasis()[i].toString();
+                }
+            }
             return null;
         } else {
             return Holder.fileData.get(type + i);
@@ -51,6 +63,11 @@ public class TaskStartController {
 
     private String cellValue(String type, int i, int j) {
         if (Holder.fileData == null) {
+            if (Holder.taskClass != null) {
+                if (type.equals("s")) {
+                    return ((SimplexMethod) Holder.taskClass).getSystem()[i - 1][j].toString();
+                }
+            }
             return null;
         } else {
             return Holder.fileData.get(type + i + "_" + j);
@@ -131,9 +148,9 @@ public class TaskStartController {
             // если все введенные пользователем данные корректны, создаю класс задачи
             if (validate()) {
                 if (Holder.current_task.equals("Симплекс метод")) {
-                    serializeToSimplex();
-                    SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                     try {
+                        serializeToSimplex();
+                        SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                         simplex.solution();
                         ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
                     } catch (InvalidTypeException | IOException e) {
@@ -141,9 +158,9 @@ public class TaskStartController {
                     }
                 }
                 if (Holder.current_task.equals("Искусственный базис")) {
-                    serializeToAB();
-                    ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
                     try {
+                        serializeToAB();
+                        ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
                         ab.solution();
                         ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
                     } catch (InvalidTypeException | IOException e) {
@@ -155,9 +172,9 @@ public class TaskStartController {
         step_solve.setOnAction((ActionEvent event) -> {
             if (validate()) {
                 if (Holder.current_task.equals("Симплекс метод")) {
-                    serializeToSimplex();
-                    SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                     try {
+                        serializeToSimplex();
+                        SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                         simplex.initiate();
                         Holder.updateTask(simplex);
                         ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
@@ -166,9 +183,9 @@ public class TaskStartController {
                     }
                 }
                 if (Holder.current_task.equals("Искусственный базис")) {
-                    serializeToAB();
-                    ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
                     try {
+                        serializeToAB();
+                        ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
                         ab.initiate();
                         Holder.updateTask(ab);
                         ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
@@ -279,7 +296,7 @@ public class TaskStartController {
         return null;
     }
 
-    private void serializeBasicData() {
+    private void serializeBasicData() throws InvalidTypeException {
         function = new Fraction[Holder.var_number];
         // задаю данные для функции
         for (int i = 0; i < Holder.var_number - 1; i++) {
@@ -312,7 +329,7 @@ public class TaskStartController {
     /**
      * Приобразую введенные данные пользователем в стартовый симплекс метод
      */
-    private void serializeToSimplex() {
+    private void serializeToSimplex() throws InvalidTypeException {
         serializeBasicData();
         Fraction[] basis = new Fraction[Holder.var_number - 1];
         // задаю базис
@@ -331,7 +348,13 @@ public class TaskStartController {
                     basis
             );
             Holder.taskClass = simplex;
-            Holder.task_solution_steps.add(new SimplexMethod("min", function, system, basis));
+            Holder.task_solution_steps.add(
+                    new SimplexMethod(
+                            "min",
+                            SimplexMethod.cloneFractionArray(function),
+                            SimplexMethod.cloneFractionArray(system),
+                            SimplexMethod.cloneFractionArray(basis))
+            );
         } catch (InvalidTypeException ex) {
             ApplicationMenu.showAlert("error", "Не могу создать симплекс метод", "Ошибка симплекса", "Не могу создать класс симплекс метода");
         }
@@ -340,7 +363,7 @@ public class TaskStartController {
     /**
      * Приобразую введенные данные пользователем в стартовый метод искусственного базиса
      */
-    private void serializeToAB() {
+    private void serializeToAB() throws InvalidTypeException {
         serializeBasicData();
         try {
             ArtificialBasic ab = new ArtificialBasic(
@@ -349,7 +372,7 @@ public class TaskStartController {
                     system
             );
             Holder.taskClass = ab;
-            Holder.task_solution_steps.add(new ArtificialBasic("min", function, system));
+            Holder.task_solution_steps.add(new ArtificialBasic("min", SimplexMethod.cloneFractionArray(function), SimplexMethod.cloneFractionArray(system)));
         } catch (InvalidTypeException ex) {
             ApplicationMenu.showAlert("error", "Не могу создать метод искусственного базиса", "Ошибка искусственного базиса", "Не могу создать класс искусственного базиса");
         }

@@ -172,6 +172,23 @@ public class SimplexMethod {
         return choosedRow;
     }
 
+
+    /**
+     * Проверяю, константа строки не отрицательна. Иначе инвертирую уравнение
+     *
+     * @throws InvalidTypeException
+     */
+    public void checkNegativeLines() throws InvalidTypeException {
+        for (int row = 0; row < system.length-1; row++) {
+            int var_num = system[row].length - 1;
+            if (Fraction.lowerThen(system[row][var_num], (long)0)) {
+                for (int i = 0; i < var_num + 1; i++) {
+                    system[row][i] = Fraction.multiplyFractions(system[row][i], Fraction.toFraction((long) -1));
+                }
+            }
+        }
+    }
+
     /**
      * Подбираю опорный элемент для шага симплекс метода
      *
@@ -425,6 +442,7 @@ public class SimplexMethod {
      * @throws InvalidTypeException
      */
     public int[] makeStep() throws InvalidTypeException {
+        checkNegativeLines();
         int[] element = pickupElement();
         if (element[0] != -1) {
             calculateNewSystem(element[0], element[1]);
@@ -512,6 +530,7 @@ public class SimplexMethod {
         updateFunction();
         // приводу матрицу гаусса к стартовой симплекс таблице
         gausToSimplex();
+        checkNegativeLines();
         status = "initiated";
         Holder.addStep(new SimplexMethod(this.type, this.function, this.system, this.basis, this.masterSlave, this.status));
     }

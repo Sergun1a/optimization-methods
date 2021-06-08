@@ -31,9 +31,10 @@ public class ArtificialBasic extends SimplexMethod {
         super(u_type, u_function, u_system, new Fraction[u_system[0].length + u_system.length]);
     }
 
-    public ArtificialBasic(String u_type, Fraction[] u_function, Fraction[][] u_system, String u_status) throws InvalidTypeException {
+    public ArtificialBasic(String u_type, Fraction[] u_function, Fraction[][] u_system, int[] u_masterSlave, String u_status) throws InvalidTypeException {
         super(u_type, u_function, u_system, new Fraction[u_system[0].length + u_system.length]);
         status = u_status;
+        masterSlave = u_masterSlave;
     }
 
     /**
@@ -67,10 +68,6 @@ public class ArtificialBasic extends SimplexMethod {
         system = artificialBasis;
     }
 
-    protected void calculateBasis() {
-
-    }
-
     /**
      * Привожу матрицу искусственного базиса к стартовой таблице симплекс метода
      */
@@ -102,7 +99,7 @@ public class ArtificialBasic extends SimplexMethod {
      *
      * @return - true или false
      */
-    protected boolean emptyABLastRow() throws InvalidTypeException {
+    public boolean emptyABLastRow() throws InvalidTypeException {
         for (int i = 0; i < system[system.length - 1].length; i++) {
             if (!Fraction.equal(system[system.length - 1][i], Fraction.toFraction((long) 0))) {
                 return false;
@@ -160,22 +157,35 @@ public class ArtificialBasic extends SimplexMethod {
     public void initiate() throws InvalidTypeException {
         // устанавливаю стартовую информацию о зависимых и основных переменных
         setABMasterSlave();
+        checkNegativeLines();
         // привожу систему к стартовой таблице искуственного базиса
         toArtificialBasisTable();
         status = "initiated";
-        Holder.task_solution_steps.add(new ArtificialBasic(this.type, this.function, this.system, this.status));
+        Holder.task_solution_steps.add(new ArtificialBasic(this.type, this.function, this.system, this.masterSlave, this.status));
     }
 
     @Override
     public int[] makeStep() throws InvalidTypeException {
-        int[] element = super.makeStep();
+        if (status.equals("ab_solved")) {
+            return super.makeStep();
+        }
+        checkNegativeLines();
+        int[] element = pickupElement();
+        if (element[0] != -1) {
+            calculateNewSystem(element[0], element[1]);
+            Holder.addStep(new ArtificialBasic(this.type, this.function, this.system, this.masterSlave, this.status));
+        }
         if (element[0] != -1) {
             system = MathMiddleware.deleteCol(system, element[1]);
             deleteVariable(-(element[1] + 1));
         }
-        if (status.equals("solved") && !isSimplexStage) {
-            status = "ab_solved";
-            isSimplexStage = true;
+        if (emptyABLastRow() || element[0] == -1) {
+            if ((element[0] == -1 && element[1] != -1) || !emptyABLastRow()) {
+                status = "solved";
+            }
+            if ((element[0] == -1 && element[1] != -1) || emptyABLastRow()) {
+                status = "ab_solved";
+            }
         }
         return element;
     }
@@ -204,6 +214,10 @@ public class ArtificialBasic extends SimplexMethod {
             System.out.println("Искусственный базис не имеет решения");
             return;
         }
+        // обновляю функцию согласно решению AB
+        updateFunction();
+        // привожу матрицу искусственного базиса к стартовой таблице симплекс метода
+        fromArtificalToSimplex();
         // решаю симплекс таблицу
         quickSolve();
     }

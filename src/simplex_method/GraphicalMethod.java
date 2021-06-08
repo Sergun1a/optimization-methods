@@ -124,9 +124,10 @@ public class GraphicalMethod extends SimplexMethod {
         // точки решения
         Fraction x = new Fraction((long) 0, (long) 1);
         Fraction y = new Fraction((long) 0, (long) 1);
+        Fraction[] basis_clone = cloneFractionArray(basis);
         int i1 = 0;
         int i2 = 0;
-
+        Fraction[][] vanilla_system = cloneFractionArray(system);
         copy_function = cloneFractionArray(function);
         //сохраняю информацию об основных и зависимых переменных
         masterSlaveInfo();
@@ -138,6 +139,8 @@ public class GraphicalMethod extends SimplexMethod {
                 // если в системе только две переменных и константа
                 if (system[0].length == 3) {
                     Fraction[][] systemClone = cloneFractionArray(system);
+                    systemClone = MathMiddleware.gaus(systemClone);
+
                     Fraction[][] subSystem = new Fraction[2][system[0].length];
                     subSystem[0] = systemClone[i];
                     subSystem[1] = systemClone[j];
@@ -158,7 +161,6 @@ public class GraphicalMethod extends SimplexMethod {
                     if (validLine(d3, d4))
                         draw.addRay(d3.x * scale, d3.y * scale, d4.x * scale, d4.y * scale, Color.blue);
 
-                    subSystem = MathMiddleware.gaus(subSystem);
                     // получаю решение
                     x_dot = Fraction.divisionFractions(subSystem[0][2], subSystem[0][0]);
                     y_dot = Fraction.divisionFractions(subSystem[1][2], subSystem[1][1]);
@@ -181,11 +183,10 @@ public class GraphicalMethod extends SimplexMethod {
                 if (system[0].length > 3) {
                     function = cloneFractionArray(copy_function);
                     Fraction[][] systemClone = cloneFractionArray(system);
+                    systemClone = MathMiddleware.gaus(systemClone);
                     Fraction[][] subSystem = new Fraction[2][system[0].length];
                     subSystem[0] = systemClone[i];
                     subSystem[1] = systemClone[j];
-                    // решаю выборку гауссом
-                    subSystem = MathMiddleware.gaus(subSystem);
                     // обновляю функцию
                     updateFunction(subSystem);
 
@@ -253,6 +254,16 @@ public class GraphicalMethod extends SimplexMethod {
         draw.show();
     }
 
+    /*@Override
+    public void solution() throws InvalidTypeException {
+        // привожу систему к системе равенств
+        toEquality();
+        // решаю симплекс
+        initiate();
+        quickSolve();
+    }*/
+
+
     protected void updateFunction(Fraction[][] user_system) throws InvalidTypeException {
         for (int master = 0; master < masterSlave.length; master++) {
             if (masterSlave[master] > 0) {
@@ -281,7 +292,7 @@ public class GraphicalMethod extends SimplexMethod {
     /**
      * Вывод решения графического метода
      */
-    /*@Override
+    @Override
     public String printSolution() throws InvalidTypeException {
         for (int i = 0; i < originalSize - 1; i++) {
             if (masterSlave[i] <= 0) {
@@ -291,5 +302,6 @@ public class GraphicalMethod extends SimplexMethod {
             }
         }
         System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
-    }*/
+        return "";
+    }
 }
