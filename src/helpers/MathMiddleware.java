@@ -6,10 +6,6 @@ import com.sun.jdi.InvalidTypeException;
  * Вспомогательный класс, реализуюший некоторые математические методы
  */
 final public class MathMiddleware {
-
-    static final int R = 11;
-    static final int C = 11;
-
     // function for exchanging two rows
     // of a matrix
     static void swap(long[][] mat,
@@ -51,96 +47,38 @@ final public class MathMiddleware {
             for (int j = 0; j < col; j++) {
                 new_mat[i][j] = mat[i][j];
             }
-            for (int j = col + 1; j < mat[0].length; j++) {
-                new_mat[i][j - 1] = mat[i][j];
+            // если столбец не последний
+            if (mat[0].length - 1 != col) {
+                for (int j = col + 1; j < mat[0].length; j++) {
+                    new_mat[i][j - 1] = mat[i][j];
+                }
             }
         }
         return new_mat;
     }
 
     /**
-     * Определяю ранг переданной матрицы
+     * Удаляю строку в переданной матрице
      *
-     * @param mat - матрица
-     * @return ранг переданной матрицы
+     * @param mat - переданная матрица
+     * @param row - номер строки
+     * @return - матрица с вырезанной строкой
      */
-    public long rang(long[][] mat) {
-        int rank = C;
-
-        for (int row = 0; row < rank; row++) {
-
-            // Before we visit current row
-            // 'row', we make sure that
-            // mat[row][0],....mat[row][row-1]
-            // are 0.
-
-            // Diagonal element is not zero
-            if (mat[row][row] != 0) {
-                for (int col = 0; col < R; col++) {
-                    if (col != row) {
-                        // This makes all entries
-                        // of current column
-                        // as 0 except entry
-                        // 'mat[row][row]'
-                        double mult =
-                                (double) mat[col][row] /
-                                        mat[row][row];
-
-                        for (int i = 0; i < rank; i++)
-
-                            mat[col][i] -= mult
-                                    * mat[row][i];
-                    }
-                }
-            }
-
-            // Diagonal element is already zero.
-            // Two cases arise:
-            // 1) If there is a row below it
-            // with non-zero entry, then swap
-            // this row with that row and process
-            // that row
-            // 2) If all elements in current
-            // column below mat[r][row] are 0,
-            // then remvoe this column by
-            // swapping it with last column and
-            // reducing number of columns by 1.
-            else {
-                boolean reduce = true;
-
-                // Find the non-zero element
-                // in current column
-                for (int i = row + 1; i < R; i++) {
-                    // Swap the row with non-zero
-                    // element with this row.
-                    if (mat[i][row] != 0) {
-                        swap(mat, row, i, rank);
-                        reduce = false;
-                        break;
-                    }
-                }
-
-                // If we did not find any row with
-                // non-zero element in current
-                // columnm, then all values in
-                // this column are 0.
-                if (reduce) {
-                    // Reduce number of columns
-                    rank--;
-
-                    // Copy the last column here
-                    for (int i = 0; i < R; i++)
-                        mat[i][row] = mat[i][rank];
-                }
-
-                // Process this row again
-                row--;
+    public static Fraction[][] deleteRow(Fraction[][] mat, int row) {
+        Fraction[][] new_mat = new Fraction[mat.length - 1][mat[0].length];
+        for (int j = 0; j < row; j++) {
+            for (int i = 0; i < mat[j].length; i++)
+                new_mat[j][i] = mat[j][i];
+        }
+        // если строка не последняя
+        if (mat.length - 1 != row) {
+            for (int j = row + 1; j < mat[0].length; j++) {
+                for (int i = 0; i < mat[j].length; i++)
+                    new_mat[j - 1][i] = mat[j][i];
             }
         }
-
-        return rank;
+        return new_mat;
     }
-
     /**
      * Нахождение НОК двух чисел
      *

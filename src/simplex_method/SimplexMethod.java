@@ -5,6 +5,7 @@ import helpers.Fraction;
 import helpers.Holder;
 import helpers.MathMiddleware;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -179,9 +180,9 @@ public class SimplexMethod {
      * @throws InvalidTypeException
      */
     public void checkNegativeLines() throws InvalidTypeException {
-        for (int row = 0; row < system.length-1; row++) {
+        for (int row = 0; row < system.length - 1; row++) {
             int var_num = system[row].length - 1;
-            if (Fraction.lowerThen(system[row][var_num], (long)0)) {
+            if (Fraction.lowerThen(system[row][var_num], (long) 0)) {
                 for (int i = 0; i < var_num + 1; i++) {
                     system[row][i] = Fraction.multiplyFractions(system[row][i], Fraction.toFraction((long) -1));
                 }
@@ -519,6 +520,38 @@ public class SimplexMethod {
         return element;
     }
 
+    protected void changeVariableType(int element) {
+        if (masterSlave[element] < 0) return;
+        int counter = 1;
+        for (int i = 0; i < masterSlave.length; i++) {
+            if (masterSlave[i] < 0) counter++;
+            // сдвигаю основные переменные
+            if (masterSlave[i] > masterSlave[element] && i != element) {
+                masterSlave[i] = masterSlave[i] - 1;
+            }
+        }
+        masterSlave[element] = -counter;
+    }
+
+    /**
+     * Проверяю системы на пустые строки для основных переменных.
+     * Если строка пуста, перевожу переменную из основных в зависимую
+     */
+    protected void checkEmptyLines() throws InvalidTypeException {
+        ArrayList<Integer> rowsOnDelete = new ArrayList<Integer>();
+        // проверяю строки на зануление
+        for (int i = 0; i < system.length; i++) {
+            if (Fraction.equal(system[i][i], (long) 0)) {
+                changeVariableType(i);
+                rowsOnDelete.add(i);
+            }
+        }
+        // удаляю найденные занулённые строки из системы
+        for (int i = 0; i < rowsOnDelete.size(); i++) {
+            system = MathMiddleware.deleteRow(system, rowsOnDelete.get(i));
+        }
+    }
+
     public void initiate() throws InvalidTypeException {
         //сохраняю информацию об основных и зависимых переменных
         masterSlaveInfo();
@@ -526,11 +559,13 @@ public class SimplexMethod {
         gausTableBasisSwap();
         // решаю систему методом гаусса
         system = MathMiddleware.gaus(system);
+        checkNegativeLines();
+        // проверяю что основные переменные не занулялись, в противном случае перевожу зануленную переменную в зависимые
+        //checkEmptyLines();
         // произвожу замены в  функции, отталкиваясь от решения метода гаусса
         updateFunction();
         // приводу матрицу гаусса к стартовой симплекс таблице
         gausToSimplex();
-        checkNegativeLines();
         status = "initiated";
         Holder.addStep(new SimplexMethod(this.type, this.function, this.system, this.basis, this.masterSlave, this.status));
     }

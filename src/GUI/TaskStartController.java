@@ -55,7 +55,14 @@ public class TaskStartController {
                 if (type.equals("b") && (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод"))) {
                     return ((SimplexMethod) Holder.taskClass).getBasis()[i].toString();
                 }
-            }
+            } else
+                // проставляю базис
+                if (type.equals("b") && (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод"))) {
+                    if (i < Holder.sys_number) {
+                        return "1";
+                    }
+                    return "0";
+                }
             return null;
         } else {
             return Holder.fileData.get(type + i);
@@ -102,7 +109,7 @@ public class TaskStartController {
         }
 
         // Если решаю симплекс метод нужно задать базис
-        if (Holder.current_task.equals("Симплекс метод")) {
+        if (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод")) {
             gridPane.add(new Text("Базис"), 0, 22);
             // делаю текстовые поля для базиса и подписи
             for (int i = 0; i < Holder.var_number - 1; i++) {
@@ -260,11 +267,21 @@ public class TaskStartController {
                 }
             }
         }
-        if (Holder.current_task.equals("Симплекс метод")) {
+        if (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод")) {
             // проверяю данные для базиса
+            int counter = 0;
             for (int i = 0; i < Holder.var_number - 1; i++) {
                 try {
-                    Fraction.toFraction(fieldValueType(((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText()));
+                    Fraction basis_elem = Fraction.toFraction(fieldValueType(((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText()));
+                    if (!(Fraction.equal(basis_elem, (long) 0) || Fraction.equal(basis_elem, (long) 1))) {
+                        ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в базисе",
+                                "Проверьте правильность коэффициентов базиса. " +
+                                        "Базис может быть или нулём или единицей");
+                        return false;
+                    }
+                    if (Fraction.equal(basis_elem, (long) 1)) {
+                        counter++;
+                    }
                 } catch (InvalidTypeException ex) {
                     ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в базисе",
                             "Проверьте правильность коэффициентов базиса. " +
@@ -273,6 +290,12 @@ public class TaskStartController {
                     return false;
                 }
             }
+            if (counter != Holder.sys_number) {
+                ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в базисе",
+                        "Кол-во базисных единиц должно быть равно кол-ву строк в системе");
+                return false;
+            }
+
         }
         return true;
     }
@@ -284,6 +307,9 @@ public class TaskStartController {
      * @return Object
      */
     public static Object fieldValueType(String value) {
+        if (value == null) {
+            return null;
+        }
         // дробь
         if (value.contains("/")) {
             return value;
