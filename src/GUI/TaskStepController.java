@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import sample.ApplicationMenu;
@@ -47,6 +48,7 @@ public class TaskStepController {
             for (int i = 0; i < Holder.var_number; i++) {
                 TextField textField = new TextField(cellValue(j - ApplicationMenu.functionInputRow, i));
                 textField.setEditable(false);
+                textField.setTooltip(new Tooltip("Введите целое число, десятичную дробь или обыкновенную дробь вида \"(целое число)/(целое число)\""));
                 gridPane.add(textField, i + 1, j);
             }
         }

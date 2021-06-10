@@ -4,13 +4,14 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="559.0" prefWidth="1388.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.TaskStartController">
+<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="559.0" prefWidth="1388.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.TaskStartController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -58,6 +59,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <MenuBar prefHeight="25.0" prefWidth="477.0" GridPane.columnSpan="18">
@@ -66,7 +68,6 @@
                <items>
                   <MenuItem id="fileOpen" fx:id="fileOpen" mnemonicParsing="false" onAction="#runMethod" text="Открыть…" />
                   <MenuItem fx:id="fileSave" mnemonicParsing="false" onAction="#runMethod" text="Сохранить" />
-                  <MenuItem mnemonicParsing="false" text="Quit" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Помощь">
@@ -86,7 +87,13 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <Button fx:id="step_solve" mnemonicParsing="false" onAction="#runMethod" prefHeight="25.0" prefWidth="123.0" text="По шагам" GridPane.columnIndex="10" GridPane.rowIndex="25" />
-      <Button fx:id="quick_solve" mnemonicParsing="false" onAction="#runMethod" prefHeight="25.0" prefWidth="207.0" text="Быстрое решение" GridPane.columnIndex="12" GridPane.rowIndex="25" />
+      <Button fx:id="step_solve" mnemonicParsing="false" onAction="#runMethod" prefHeight="25.0" prefWidth="123.0" text="По шагам" GridPane.columnIndex="10" GridPane.rowIndex="25">
+         <tooltip>
+            <Tooltip text="Запустить пошаговое решение" />
+         </tooltip></Button>
+      <Button fx:id="quick_solve" mnemonicParsing="false" onAction="#runMethod" prefHeight="25.0" prefWidth="207.0" text="Решение" GridPane.columnIndex="12" GridPane.rowIndex="25">
+         <tooltip>
+            <Tooltip text="Получить решение" />
+         </tooltip></Button>
    </children>
 </GridPane>

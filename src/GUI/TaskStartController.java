@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import sample.ApplicationMenu;
@@ -45,11 +46,11 @@ public class TaskStartController {
         if (Holder.fileData == null) {
             if (Holder.taskClass != null) {
                 if (type.equals("f")) {
-                    int lenght = ((SimplexMethod) Holder.taskClass).getFunction().length-1;
+                    int lenght = ((SimplexMethod) Holder.taskClass).getFunction().length - 1;
                     if (i == lenght) {
                         return ((SimplexMethod) Holder.taskClass).getFunction()[0].toString();
                     }
-                    return ((SimplexMethod) Holder.taskClass).getFunction()[i+1].toString();
+                    return ((SimplexMethod) Holder.taskClass).getFunction()[i + 1].toString();
                 }
                 if (type.equals("b") && (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод"))) {
                     return ((SimplexMethod) Holder.taskClass).getBasis()[i].toString();
@@ -80,17 +81,23 @@ public class TaskStartController {
         for (int i = 0; i < Holder.var_number - 1; i++) {
             gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.functionLabelRow);
             gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.systemLabelRow);
-            gridPane.add(new TextField(cellValue("f", i)), i, ApplicationMenu.functionInputRow);
+            TextField textField = new TextField(cellValue("f", i));
+            textField.setTooltip(new Tooltip("Введите целое число, десятичную дробь или обыкновенную дробь вида \"(целое число)/(целое число)\""));
+            gridPane.add(textField, i, ApplicationMenu.functionInputRow);
         }
         // константа для функции и системы
         gridPane.add(new Text("C"), Holder.var_number - 1, ApplicationMenu.functionLabelRow);
         gridPane.add(new Text("C"), Holder.var_number - 1, ApplicationMenu.systemLabelRow);
-        gridPane.add(new TextField(cellValue("f", Holder.var_number - 1)), Holder.var_number - 1, ApplicationMenu.functionInputRow);
+        TextField textField = new TextField(cellValue("f", Holder.var_number - 1));
+        textField.setTooltip(new Tooltip("Введите целое число, десятичную дробь или обыкновенную дробь вида \"(целое число)/(целое число)\""));
+        gridPane.add(textField, Holder.var_number - 1, ApplicationMenu.functionInputRow);
 
         // делаю текстовые поля для системы
         for (int j = ApplicationMenu.systemInputRow; j < Holder.sys_number + ApplicationMenu.systemInputRow; j++) {
             for (int i = 0; i < Holder.var_number; i++) {
-                gridPane.add(new TextField(cellValue("s", j - ApplicationMenu.systemInputRow + 1, i)), i, j);
+                TextField textField1 = new TextField(cellValue("s", j - ApplicationMenu.systemInputRow + 1, i));
+                textField1.setTooltip(new Tooltip("Введите целое число, десятичную дробь или обыкновенную дробь вида \"(целое число)/(целое число)\""));
+                gridPane.add(textField1, i, j);
             }
         }
 
@@ -100,7 +107,9 @@ public class TaskStartController {
             // делаю текстовые поля для базиса и подписи
             for (int i = 0; i < Holder.var_number - 1; i++) {
                 gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.basisLabelRow);
-                gridPane.add(new TextField(cellValue("b", i)), i, ApplicationMenu.basisInputRow);
+                TextField textField1 = new TextField(cellValue("b", i));
+                textField1.setTooltip(new Tooltip("Введите целое число, десятичную дробь или обыкновенную дробь вида \"(целое число)/(целое число)\""));
+                gridPane.add(textField1, i, ApplicationMenu.basisInputRow);
             }
         }
         Holder.fileData = null;
