@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import simplex_method.ArtificialBasic;
+import simplex_method.GraphicalMethod;
 import simplex_method.SimplexMethod;
 
 public class SolutionController {
@@ -21,6 +22,10 @@ public class SolutionController {
         if (Holder.current_task.equals("Искусственный базис")) {
             ArtificialBasic task = (ArtificialBasic) (Holder.taskClass);
             gridPane.add(new Text((task.printSolution())), 0, 1);
+        }
+        if (Holder.current_task.equals("Графический метод")) {
+            GraphicalMethod task = (GraphicalMethod) (Holder.taskClass);
+            gridPane.add(new Text(task.printSolution()), 0, 1);
         }
     }
 }

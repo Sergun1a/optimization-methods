@@ -213,7 +213,7 @@ public class Main extends Application {
                         {Fraction.toFraction((long) 1), Fraction.toFraction((long) -1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 3)},
                         {Fraction.toFraction((long) 2), Fraction.toFraction((long) -5), Fraction.toFraction((long) -1), Fraction.toFraction((long) 0)},
                 },
-                new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 0), Fraction.toFraction((long) 0)}
+                new Fraction[]{Fraction.toFraction((long) 1), Fraction.toFraction((long) 1), Fraction.toFraction((long) 0)}
         );
         /*GraphicalMethod abasis = new GraphicalMethod(
                 "min",

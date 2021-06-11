@@ -178,17 +178,24 @@ public class GraphicalMethod extends SimplexMethod {
                     // коэффициенты функции
                     f_x = Fraction.multiplyFractions(function[1], Fraction.toFraction((long) -1));
                     f_y = Fraction.multiplyFractions(function[2], Fraction.toFraction((long) -1));
+                    System.out.println("x" + i1 + " = " + x.toString());
+                    System.out.println("x" + i2 + " = " + y.toString());
+                    System.out.println("f = " + min_func_value.toString());
+                    // вектор антинормали
+                    Dot av = new Dot(f_x, f_y);
+                    draw.addLine(0, 0, av.x * scale, av.y * scale, Color.red);
+                    draw.show();
+                    return;
                 }
                 // если больше двух переменных
                 if (system[0].length > 3) {
+                    basis = cloneFractionArray(basis_clone);
                     function = cloneFractionArray(copy_function);
                     Fraction[][] systemClone = cloneFractionArray(system);
                     systemClone = MathMiddleware.gaus(systemClone);
                     Fraction[][] subSystem = new Fraction[2][system[0].length];
                     subSystem[0] = systemClone[i];
                     subSystem[1] = systemClone[j];
-                    // обновляю функцию
-                    updateFunction(subSystem);
 
                     // определяю индекс зависимых переменных
                     int slave_1 = findVar(-1);
@@ -198,7 +205,10 @@ public class GraphicalMethod extends SimplexMethod {
                     // граничные неравенства
                     Fraction x_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_1]);
                     Dot d1 = (new Dot(x_dot, Fraction.toFraction((long) 0)));
-                    Fraction y_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_2]);
+                    Fraction y_dot = Fraction.toFraction((long) 0);
+                    if (slave_2 != -1) {
+                        y_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_2]);
+                    }
                     Dot d2 = (new Dot(Fraction.toFraction((long) 0), y_dot));
                     Fraction[] eq1_solve = new Fraction[]{x_dot, y_dot};
                     if (validLine(d1, d2))
@@ -206,63 +216,26 @@ public class GraphicalMethod extends SimplexMethod {
 
                     x_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_1]);
                     Dot d3 = (new Dot(x_dot, Fraction.toFraction((long) 0)));
-                    y_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_2]);
+                    y_dot = Fraction.toFraction((long) 0);
+                    if (slave_2 != -1) {
+                        y_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_2]);
+                    }
                     Dot d4 = (new Dot(Fraction.toFraction((long) 0), y_dot));
                     Fraction[] eq2_solve = new Fraction[]{x_dot, y_dot};
                     if (validLine(d3, d4))
                         draw.addRay(d3.x * scale, d3.y * scale, d4.x * scale, d4.y * scale, Color.blue);
-
-                    // получаю значения основных переменных через зависимые
-                    int master_i = findVar(i + 1);
-                    int master_j = findVar(j + 1);
-
-                    Fraction coef_val_1 = Fraction.multiplyFractions(eq1_solve[0], subSystem[0][slave_1]);
-                    Fraction coef_val_2 = Fraction.multiplyFractions(eq1_solve[1], subSystem[0][slave_2]);
-
-                    Fraction slave_var_1 = Fraction.summFractions(coef_val_1, coef_val_2);
-                    x_dot = Fraction.subtractionFractions(slave_var_1, subSystem[0][const_val]);
-
-                    coef_val_1 = Fraction.multiplyFractions(eq2_solve[0], subSystem[1][slave_1]);
-                    coef_val_2 = Fraction.multiplyFractions(eq2_solve[1], subSystem[1][slave_2]);
-                    slave_var_1 = Fraction.summFractions(coef_val_1, coef_val_2);
-                    y_dot = Fraction.subtractionFractions(slave_var_1, subSystem[1][const_val]);
-
-                    // получаю значение функции
-                    Fraction x1_value = Fraction.multiplyFractions(function[master_i + 1], x_dot);
-                    Fraction x2_value = Fraction.multiplyFractions(function[master_j + 1], y_dot);
-                    Fraction func_value = Fraction.summFractions(Fraction.summFractions(x1_value, x2_value), function[0]);
-                    if (Fraction.lowerThen(func_value, min_func_value) && Fraction.moreThen(x_dot, Fraction.toFraction((long) -1)) &&
-                            Fraction.moreThen(y_dot, Fraction.toFraction((long) -1))) {
-                        min_func_value = func_value;
-                        x = x_dot;
-                        y = y_dot;
-                        // коэффициенты функции
-                        f_x = Fraction.multiplyFractions(function[slave_1 + 1], Fraction.toFraction((long) -1));
-                        f_y = Fraction.multiplyFractions(function[slave_2 + 1], Fraction.toFraction((long) -1));
-                        i1 = master_i + 1;
-                        i2 = master_j + 1;
-                    }
                 }
             }
         }
-        System.out.println("x" + i1 + " = " + x.toString());
-        System.out.println("x" + i2 + " = " + y.toString());
-        System.out.println("f = " + min_func_value.toString());
-        // вектор антинормали
-        Dot av = new Dot(f_x, f_y);
-        draw.addLine(0, 0, av.x * scale, av.y * scale, Color.red);
-        draw.show();
-    }
-
-    /*@Override
-    public void solution() throws InvalidTypeException {
+        basis = cloneFractionArray(basis_clone);
+        function = cloneFractionArray(copy_function);
         // привожу систему к системе равенств
         toEquality();
         // решаю симплекс
         initiate();
         quickSolve();
-    }*/
-
+        draw.show();
+    }
 
     protected void updateFunction(Fraction[][] user_system) throws InvalidTypeException {
         for (int master = 0; master < masterSlave.length; master++) {
@@ -294,14 +267,24 @@ public class GraphicalMethod extends SimplexMethod {
      */
     @Override
     public String printSolution() throws InvalidTypeException {
-        for (int i = 0; i < originalSize - 1; i++) {
-            if (masterSlave[i] <= 0) {
-                System.out.println("x" + (i + 1) + " = " + 0);
-            } else {
-                System.out.println("x" + (i + 1) + " = " + system[masterSlave[i] - 1][system[masterSlave[i] - 1].length - 1]);
+        StringBuilder res = new StringBuilder();
+        int[] nextElem = idlePickupElement();
+        if (nextElem[0] == -1 && nextElem[1] == -1) {
+            res.append("Система решена\n");
+            for (int i = 0; i < originalSize - 1; i++) {
+                if (masterSlave[i] <= 0) {
+                    res.append("x").append(i + 1).append("=").append(0).append("\n");
+                    System.out.println("x" + (i + 1) + " = " + 0);
+                } else {
+                    res.append("x").append(i + 1).append("=").append(system[masterSlave[i] - 1][system[masterSlave[i] - 1].length - 1]).append("\n");
+                    System.out.println("x" + (i + 1) + " = " + system[masterSlave[i] - 1][system[masterSlave[i] - 1].length - 1]);
+                }
             }
+            res.append("\nf = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
+            System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
+        } else if (nextElem[0] == -1 && nextElem[1] != -1) {
+            res.append("Система не имеет решений\n");
         }
-        System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
-        return "";
+        return res.toString();
     }
 }

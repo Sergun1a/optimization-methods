@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import sample.ApplicationMenu;
 import simplex_method.ArtificialBasic;
+import simplex_method.GraphicalMethod;
 import simplex_method.SimplexMethod;
 
 import java.io.IOException;
@@ -84,6 +85,11 @@ public class TaskStartController {
 
     @FXML
     private void initialize() {
+        // если графический метод, то скрываю кнопку решения по шагам
+        if (Holder.current_task.equals("Графический метод")) {
+            gridPane.getChildren().remove(3);
+        }
+
         // делаю текстовые поля для функции и подписи
         for (int i = 0; i < Holder.var_number - 1; i++) {
             gridPane.add(new Text("x" + (i + 1)), i, ApplicationMenu.functionLabelRow);
@@ -183,6 +189,16 @@ public class TaskStartController {
                         e.printStackTrace();
                     }
                 }
+                if (Holder.current_task.equals("Графический метод")) {
+                    try {
+                        serializeToGraph();
+                        GraphicalMethod graph = (GraphicalMethod) Holder.taskClass;
+                        graph.solution();
+                        ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                    } catch (InvalidTypeException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
         step_solve.setOnAction((ActionEvent event) -> {
@@ -216,7 +232,7 @@ public class TaskStartController {
     /**
      * Заполняю поля данными из файла
      */
-    private void fillFieldsByFileData(HashMap<String, String> data) throws IOException {
+    public static void fillFieldsByFileData(HashMap<String, String> data) throws IOException {
         if (!data.get("type").equals(Holder.current_task)) {
             ApplicationMenu.showAlert("warning", "Типы задач не совпадают", "",
                     "Тип решаемой вами задачи и задачи в файле не совпадают. Вероятна потеря информации или необходимость ввести недостающие данные");
@@ -270,6 +286,7 @@ public class TaskStartController {
         if (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод")) {
             // проверяю данные для базиса
             int counter = 0;
+            int zero_counter = 0;
             for (int i = 0; i < Holder.var_number - 1; i++) {
                 try {
                     Fraction basis_elem = Fraction.toFraction(fieldValueType(((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText()));
@@ -282,6 +299,9 @@ public class TaskStartController {
                     if (Fraction.equal(basis_elem, (long) 1)) {
                         counter++;
                     }
+                    if (Fraction.equal(basis_elem, (long) 0)) {
+                        zero_counter++;
+                    }
                 } catch (InvalidTypeException ex) {
                     ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в базисе",
                             "Проверьте правильность коэффициентов базиса. " +
@@ -293,6 +313,11 @@ public class TaskStartController {
             if (counter != Holder.sys_number) {
                 ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в базисе",
                         "Кол-во базисных единиц должно быть равно кол-ву строк в системе");
+                return false;
+            }
+            if (Holder.current_task.equals("Графический метод") && zero_counter > 2) {
+                ApplicationMenu.showAlert("error", "Ошибка", "Некорретные данные в базисе",
+                        "Кол-во базисных нулей не должно быть больше двух для графического метода");
                 return false;
             }
 
@@ -415,10 +440,35 @@ public class TaskStartController {
 
     /**
      * Приобразую введенные данные пользователем в стартовый графический метод
-     *
-     * @return - класс графического метода с пользовательскими данными
      */
-    /*private GraphicalMethod serializeToGraph() {
-
-    }*/
+    private void serializeToGraph() throws InvalidTypeException {
+        serializeBasicData();
+        Fraction[] basis = new Fraction[Holder.var_number - 1];
+        // задаю базис
+        for (int i = 0; i < Holder.var_number - 1; i++) {
+            try {
+                basis[i] = Fraction.toFraction(fieldValueType(((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText()));
+            } catch (InvalidTypeException ex) {
+                basis[i] = new Fraction((long) 0, (long) 1);
+            }
+        }
+        try {
+            GraphicalMethod graph = new GraphicalMethod(
+                    "min",
+                    function,
+                    system,
+                    basis
+            );
+            Holder.taskClass = graph;
+            Holder.task_solution_steps.add(
+                    new GraphicalMethod(
+                            "min",
+                            SimplexMethod.cloneFractionArray(function),
+                            SimplexMethod.cloneFractionArray(system),
+                            SimplexMethod.cloneFractionArray(basis))
+            );
+        } catch (InvalidTypeException ex) {
+            ApplicationMenu.showAlert("error", "Не могу создать графический метод", "Ошибка графического метода", "Не могу создать класс графического метода");
+        }
+    }
 }

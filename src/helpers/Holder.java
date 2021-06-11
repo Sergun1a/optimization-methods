@@ -66,7 +66,7 @@ public class Holder {
      * Fxml файл для вывода решения
      */
     public static String solutionFile() {
-        if (current_task.equals("Симплекс метод")) {
+        if (current_task.equals("Симплекс метод") || current_task.equals("Графический метод")) {
             return "solution_output.fxml";
         }
         if (current_task.equals("Искусственный базис")) {

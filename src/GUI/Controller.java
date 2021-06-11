@@ -54,5 +54,14 @@ public class Controller {
                 e.printStackTrace();
             }
         });
+        graph_start.setOnAction((ActionEvent event) -> {
+            // вывожу окно с выбором количества переменных и количества уравнений в системе
+            try {
+                ApplicationMenu.showScene(Holder.primaryStage, "select.fxml", "Выбор", 300, 300);
+                Holder.current_task = "Графический метод";
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
