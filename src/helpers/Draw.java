@@ -66,7 +66,12 @@ class LinesComponent extends JComponent {
         super.paintComponent(g);
         for (Line line : lines) {
             g.setColor(line.color);
-            g.drawLine(widthCenter + line.x1, heightCenter - line.y1, widthCenter + line.x2, heightCenter - line.y2);
+            if ((line.x1 < line.x2) || (line.x1 == line.x2 && (line.y1 <= line.y2))) {
+                g.drawLine(widthCenter + line.x1, heightCenter - line.y1, widthCenter + line.x2, heightCenter - line.y2);
+            } else if ((line.x1 > line.x2) || (line.x1 == line.x2 && (line.y1 > line.y2))) {
+                g.drawLine(widthCenter + line.x2, heightCenter - line.y2, widthCenter + line.x1, heightCenter - line.y1);
+
+            }
         }
         for (Line line : rays) {
             g.setColor(line.color);
@@ -102,12 +107,37 @@ public class Draw {
 
     public void addLine(int x1, int y1, int x2, int y2, Color color) {
         Color randomColor = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
-        comp.addLine(x1, y1, x2, y2, color);
+        if (x1 < x2) {
+            comp.addLine(x1, y1, x2, y2, color);
+        }
+        if (x1 > x2) {
+            comp.addLine(x2, y2, x1, y1, color);
+        }
+        if (x1 == x2) {
+            if (y1 <= y2) {
+                comp.addLine(x1, y1, x2, y2, color);
+            } else {
+                comp.addLine(x2, y2, x1, y1, color);
+            }
+        }
+
     }
 
     public void addRay(int x1, int y1, int x2, int y2, Color color) {
         Color randomColor = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
-        comp.addRay(x1, y1, x2, y2, color);
+        if (x1 < x2) {
+            comp.addRay(x1, y1, x2, y2, color);
+        }
+        if (x1 > x2) {
+            comp.addRay(x2, y2, x1, y1, color);
+        }
+        if (x1 == x2) {
+            if (y1 <= y2) {
+                comp.addRay(x1, y1, x2, y2, color);
+            } else {
+                comp.addRay(x2, y2, x1, y1, color);
+            }
+        }
     }
 
     public void clearLines() {

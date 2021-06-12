@@ -178,37 +178,36 @@ public class GraphicalMethod extends SimplexMethod {
                     // коэффициенты функции
                     f_x = Fraction.multiplyFractions(function[1], Fraction.toFraction((long) -1));
                     f_y = Fraction.multiplyFractions(function[2], Fraction.toFraction((long) -1));
-                    System.out.println("x" + i1 + " = " + x.toString());
-                    System.out.println("x" + i2 + " = " + y.toString());
-                    System.out.println("f = " + min_func_value.toString());
                     // вектор антинормали
                     Dot av = new Dot(f_x, f_y);
                     draw.addLine(0, 0, av.x * scale, av.y * scale, Color.red);
                     draw.show();
-                    return;
                 }
                 // если больше двух переменных
                 if (system[0].length > 3) {
-                    basis = cloneFractionArray(basis_clone);
-                    function = cloneFractionArray(copy_function);
                     Fraction[][] systemClone = cloneFractionArray(system);
                     systemClone = MathMiddleware.gaus(systemClone);
-                    Fraction[][] subSystem = new Fraction[2][system[0].length];
+                    systemClone = MathMiddleware.gaus(systemClone);
+                    Fraction[][] simplexTable = new Fraction[systemClone.length + 1][systemClone[0].length - systemClone.length];
+                    for (int k = 0; k < systemClone.length; k++) {
+                        for (int c = systemClone.length; c < systemClone[0].length; c++) {
+                            simplexTable[k][c - systemClone.length] = systemClone[k][c];
+                        }
+                    }
+                    systemClone = cloneFractionArray(simplexTable);
+                    Fraction[][] subSystem = new Fraction[2][systemClone[0].length];
                     subSystem[0] = systemClone[i];
                     subSystem[1] = systemClone[j];
 
                     // определяю индекс зависимых переменных
-                    int slave_1 = findVar(-1);
-                    int slave_2 = findVar(-2);
+                    int slave_1 = 0;
+                    int slave_2 = 1;
                     int const_val = subSystem[0].length - 1;
 
                     // граничные неравенства
                     Fraction x_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_1]);
                     Dot d1 = (new Dot(x_dot, Fraction.toFraction((long) 0)));
-                    Fraction y_dot = Fraction.toFraction((long) 0);
-                    if (slave_2 != -1) {
-                        y_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_2]);
-                    }
+                    Fraction y_dot = Fraction.divisionFractions(subSystem[0][const_val], subSystem[0][slave_2]);
                     Dot d2 = (new Dot(Fraction.toFraction((long) 0), y_dot));
                     Fraction[] eq1_solve = new Fraction[]{x_dot, y_dot};
                     if (validLine(d1, d2))
@@ -216,10 +215,7 @@ public class GraphicalMethod extends SimplexMethod {
 
                     x_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_1]);
                     Dot d3 = (new Dot(x_dot, Fraction.toFraction((long) 0)));
-                    y_dot = Fraction.toFraction((long) 0);
-                    if (slave_2 != -1) {
-                        y_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_2]);
-                    }
+                    y_dot = Fraction.divisionFractions(subSystem[1][const_val], subSystem[1][slave_2]);
                     Dot d4 = (new Dot(Fraction.toFraction((long) 0), y_dot));
                     Fraction[] eq2_solve = new Fraction[]{x_dot, y_dot};
                     if (validLine(d3, d4))
@@ -229,37 +225,30 @@ public class GraphicalMethod extends SimplexMethod {
         }
         basis = cloneFractionArray(basis_clone);
         function = cloneFractionArray(copy_function);
+        system = cloneFractionArray(vanilla_system);
+        masterSlave = new int[function.length - 1];
+
         // привожу систему к системе равенств
         toEquality();
         // решаю симплекс
         initiate();
         quickSolve();
-        draw.show();
-    }
-
-    protected void updateFunction(Fraction[][] user_system) throws InvalidTypeException {
-        for (int master = 0; master < masterSlave.length; master++) {
-            if (masterSlave[master] > 0) {
-                Fraction coef = function[master + 1];
-                function[master + 1] = Fraction.toFraction((long) 0);
-                for (int slave = 0; slave < masterSlave.length; slave++) {
-                    if (masterSlave[slave] < 0) {
-                        function[slave + 1] = Fraction.summFractions(
-                                function[slave + 1],
-                                Fraction.multiplyFractions(
-                                        coef,
-                                        Fraction.multiplyFractions(user_system[masterSlave[master] - 1][-masterSlave[slave] + user_system.length - 1], Fraction.toFraction((long) -1))
-                                )
-                        );
-                    }
-                }
-                // складываю константы
-                function[0] = Fraction.summFractions(
-                        function[0],
-                        Fraction.multiplyFractions(coef, user_system[masterSlave[master] - 1][user_system[0].length - 1])
-                );
+        // получаю антинормаль
+        Fraction[] van = new Fraction[]{
+                Fraction.toFraction((long) 0), Fraction.toFraction((long) 0)
+        };
+        int counter = 0;
+        for (int i = 1; i < copy_function.length; i++) {
+            if (!Fraction.equal(function[i], (long) 0)) {
+                van[counter] = function[i];
+                counter++;
             }
         }
+        Dot dot2 = new Dot(van[0], van[1]);
+        if (system[0].length > 3) {
+            draw.addLine(0, 0, dot2.x * scale, dot2.y * scale, Color.red);
+        }
+        draw.show();
     }
 
     /**

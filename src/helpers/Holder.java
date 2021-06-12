@@ -83,6 +83,10 @@ public class Holder {
         return "task_step.fxml";
     }
 
+    public static String helpFile() {
+        return "help.fxml";
+    }
+
     public static void updateTask(Object task) {
         taskClass = task;
         var_number = ((SimplexMethod) task).getSystem()[0].length;

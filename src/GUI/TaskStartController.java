@@ -42,6 +42,9 @@ public class TaskStartController {
     @FXML
     private MenuItem fileOpen;
 
+    @FXML
+    private MenuItem help;
+
 
     private String cellValue(String type, int i) {
         if (Holder.fileData == null) {
@@ -134,6 +137,16 @@ public class TaskStartController {
      * @param actionEvent
      */
     public void runMethod(ActionEvent actionEvent) {
+        help.setOnAction((ActionEvent event) -> {
+            try {
+                ApplicationMenu.showNewStage(Holder.helpFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+
         fileOpen.setOnAction((ActionEvent event) -> {
             try {
                 HashMap<String, String> data = FileWorker.openFile();
@@ -158,7 +171,7 @@ public class TaskStartController {
                 }
             }
 
-            if (Holder.current_task.equals("Симплекс метод")) {
+            if (Holder.current_task.equals("Симплекс метод") || Holder.current_task.equals("Графический метод")) {
                 for (int i = 0; i < Holder.var_number - 1; i++) {
                     content += FileWorker.attributeToString("b" + i, ((TextField) ApplicationMenu.getNodeFromGridPane(gridPane, i, ApplicationMenu.basisInputRow)).getText());
                 }
@@ -233,9 +246,13 @@ public class TaskStartController {
      * Заполняю поля данными из файла
      */
     public static void fillFieldsByFileData(HashMap<String, String> data) throws IOException {
-        if (!data.get("type").equals(Holder.current_task)) {
-            ApplicationMenu.showAlert("warning", "Типы задач не совпадают", "",
-                    "Тип решаемой вами задачи и задачи в файле не совпадают. Вероятна потеря информации или необходимость ввести недостающие данные");
+        try {
+            if (!data.get("type").equals(Holder.current_task)) {
+                ApplicationMenu.showAlert("warning", "Типы задач не совпадают", "",
+                        "Тип решаемой вами задачи и задачи в файле не совпадают. Вероятна потеря информации или необходимость ввести недостающие данные");
+            }
+        } catch (NullPointerException ex) {
+            ex.getMessage();
         }
         int var_number = 0;
         int sys_number = 0;

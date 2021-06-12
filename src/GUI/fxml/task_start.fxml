@@ -72,7 +72,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Помощь">
                <items>
-                  <MenuItem mnemonicParsing="false" text="О программе" />
+                  <MenuItem fx:id="help" mnemonicParsing="false" onAction="#runMethod" text="О программе" />
                </items>
             </Menu>
          </menus>
