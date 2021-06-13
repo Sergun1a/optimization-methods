@@ -49,7 +49,7 @@ public class SelectController {
         select_end.setOnAction((ActionEvent event) -> {
             if (var_number.getValue() != null && sys_number.getValue() != null) {
                 try {
-                    Holder.var_number = (int) var_number.getValue();
+                    Holder.var_number = ((int) var_number.getValue()) + 1;
                     Holder.sys_number = (int) sys_number.getValue();
                     if (Holder.sys_number > Holder.var_number) {
                         error_field.setText("Количества строк в системе не может превышать кол-ва переменных");
