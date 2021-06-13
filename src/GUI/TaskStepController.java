@@ -88,7 +88,8 @@ public class TaskStepController {
                             task.setUserSupportingElem(Integer.parseInt(basis_col.getText()) - 1, Integer.parseInt(basis_row.getText()) - 1);
                             task.makeStep();
                             Holder.updateTask(task);
-                            if (((SimplexMethod) Holder.taskClass).status.equals("solved")) {
+                            if (((SimplexMethod) Holder.taskClass).status.equals("solved")
+                                    || (task.idlePickupElement()[0] == -1 || task.idlePickupElement()[1] == -1)) {
                                 ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
                             } else
                                 ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
@@ -115,7 +116,7 @@ public class TaskStepController {
                                 task.toSimplex();
                                 Holder.current_task = "Симплекс метод";
                             }
-                            if (((ArtificialBasic) Holder.taskClass).status.equals("solved")) {
+                            if (((ArtificialBasic) Holder.taskClass).status.equals("solved") || (task.idlePickupElement()[0] == -1 || task.idlePickupElement()[1] == -1)) {
                                 ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
                             } else
                                 ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);

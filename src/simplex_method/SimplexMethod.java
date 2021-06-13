@@ -160,10 +160,10 @@ public class SimplexMethod {
     protected int chooseRow(int column) throws InvalidTypeException {
         int choosedRow = -1;
         int rows = system.length;
-        Fraction min = new Fraction(Long.MAX_VALUE, 1);
+        Fraction min = new Fraction((long) Integer.MAX_VALUE, 1);
         for (int i = 0; i < rows - 1; i++) {
             if (Fraction.moreThen(system[i][column], (long) 0) && Fraction.moreThen(system[i][system[0].length - 1], (long) -1)) {
-                Fraction currentMin = Fraction.divisionFractions(system[i][system[0].length - 1], system[i][column]);
+                Fraction currentMin = Fraction.divisionFractions(system[i][system[i].length - 1], system[i][column]);
                 if (Fraction.lowerThen(currentMin, min)) {
                     min = currentMin;
                     choosedRow = i;

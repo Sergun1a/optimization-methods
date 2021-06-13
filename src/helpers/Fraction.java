@@ -189,7 +189,7 @@ public class Fraction {
     public static boolean lowerThen(Fraction fraction, Object value) throws InvalidTypeException {
         Fraction compareFraction = toFraction(value);
         fraction = toStandartFraction(fraction);
-        if (fraction.getDividend() /compareFraction.getDivider() <
+        if (fraction.getDividend() * compareFraction.getDivider() <
                 compareFraction.getDividend() * fraction.getDivider()) {
             return true;
         }

@@ -104,7 +104,8 @@ public class TaskStartController {
         // константа для функции и системы
         gridPane.add(new Text("C"), Holder.var_number - 1, ApplicationMenu.functionLabelRow);
         gridPane.add(new Text("C"), Holder.var_number - 1, ApplicationMenu.systemLabelRow);
-        TextField textField = new TextField(cellValue("f", Holder.var_number - 1));
+        TextField textField = new TextField("0");
+        textField.setEditable(false);
         textField.setTooltip(new Tooltip("Введите целое число, десятичную дробь или обыкновенную дробь вида \"(целое число)/(целое число)\""));
         gridPane.add(textField, Holder.var_number - 1, ApplicationMenu.functionInputRow);
 
@@ -222,7 +223,10 @@ public class TaskStartController {
                         SimplexMethod simplex = (SimplexMethod) Holder.taskClass;
                         simplex.initiate();
                         Holder.updateTask(simplex);
-                        ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                        if ((simplex.idlePickupElement()[0] == -1 || simplex.idlePickupElement()[1] == -1)) {
+                            ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                        } else
+                            ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
                     } catch (IOException | InvalidTypeException e) {
                         e.printStackTrace();
                     }
@@ -233,7 +237,10 @@ public class TaskStartController {
                         ArtificialBasic ab = (ArtificialBasic) Holder.taskClass;
                         ab.initiate();
                         Holder.updateTask(ab);
-                        ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
+                        if ((ab.idlePickupElement()[0] == -1 || ab.idlePickupElement()[1] == -1)) {
+                            ApplicationMenu.showScene(Holder.primaryStage, Holder.solutionFile(), Holder.current_task, 500, 500);
+                        } else
+                            ApplicationMenu.showScene(Holder.primaryStage, Holder.taskStepFile(), Holder.current_task, Holder.screenWidth, Holder.screenHeight);
                     } catch (InvalidTypeException | IOException e) {
                         e.printStackTrace();
                     }
