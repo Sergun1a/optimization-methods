@@ -481,19 +481,19 @@ public class SimplexMethod {
     public String printSolution() throws InvalidTypeException {
         StringBuilder res = new StringBuilder();
         int[] nextElem = idlePickupElement();
-        if (nextElem[0] == -1 && nextElem[1] == -1) {
+        if ((nextElem[0] == -1 && nextElem[1] == -1) && system[0].length > 1) {
             res.append("Система решена\n");
             for (int i = 0; i < system.length - 1; i++) {
                 res.append("x").append(findVar(i + 1) + 1).append(" = ").append(system[i][system[i].length - 1]).append("\n");
-                System.out.println("x" + (findVar(i + 1) + 1) + " = " + system[i][system[i].length - 1]);
+                //System.out.println("x" + (findVar(i + 1) + 1) + " = " + system[i][system[i].length - 1]);
             }
             for (int i = 0; i < system[0].length - 1; i++) {
                 res.append("x").append(findVar(-(i + 1)) + 1).append(" = ").append(0).append("\n");
-                System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
+                //System.out.println("x" + (findVar(-(i + 1)) + 1) + " = " + 0);
             }
             res.append("\nf = ").append(Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1))).append("\n");
-            System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
-        } else if (nextElem[0] == -1 && nextElem[1] != -1) {
+            //System.out.println("f = " + Fraction.multiplyFractions(system[system.length - 1][system[system.length - 1].length - 1], Fraction.toFraction((long) -1)));
+        } else if ((nextElem[0] == -1 && nextElem[1] != -1) || system[0].length == 1) {
             res.append("Система не имеет решений\n");
         }
         return res.toString();

@@ -248,7 +248,10 @@ public class GraphicalMethod extends SimplexMethod {
         if (system[0].length > 3) {
             draw.addLine(0, 0, dot2.x * scale, dot2.y * scale, Color.red);
         }
-        draw.show();
+        // если нашел решение рисую график
+        if (!(idlePickupElement()[0] == -1 && idlePickupElement()[1] != -1)) {
+            draw.show();
+        }
     }
 
     /**
